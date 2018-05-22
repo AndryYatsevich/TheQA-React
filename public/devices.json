@@ -1,0 +1,45 @@
+[
+    {
+      "id": 1,
+      "status": 0,
+      "title": "iPhone 5s",
+      "os": "iOS",
+      "osVersion": "10.2",
+      "resolutionScreen": "1024x768",
+      "timeStart": null,
+      "comment": null
+    },
+    {
+      "id": 2,
+      "status": 1,
+      "title": "iPhone 6s",
+      "os": "iOS",
+      "osVersion": "12.2",
+      "resolutionScreen": "2024x768",
+      "timeStart": 32342321332,
+      "comment": "какой-то коммент",
+      "userName": "Андрей Яцевич"
+    },
+    {
+      "id": 3,
+      "status": 2,
+      "title": "iPhone 7s",
+      "os": "iOS",
+      "osVersion": "11.2",
+      "resolutionScreen": "2024x768",
+      "timeStart": 32342321332,
+      "comment": null,
+      "userName": "Андрей Яцевич"
+    },
+    {
+      "id": 4,
+      "status": 0,
+      "title": "iPhone 8s",
+      "os": "iOS",
+      "osVersion": "10.2",
+      "resolutionScreen": "2024x768",
+      "timeStart": null,
+      "comment": null,
+      "userName": null
+    }
+  ]

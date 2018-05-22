@@ -1,0 +1,19 @@
+html, body, body > .content-height, .content-height {
+  height: 100%;
+}
+.content-height{
+  min-height: 100%;
+}
+.general-col{
+  padding-left: 0;
+  padding-right: 0;
+}
+.menu-item {
+  text-decoration: none;
+}
+.img-background{
+  position: fixed;
+  z-index: -10;
+  bottom: 0;
+  right: 0;
+}

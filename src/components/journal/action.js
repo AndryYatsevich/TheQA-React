@@ -5,7 +5,7 @@ import Axios from 'axios';
 export const getAllDevices = () => (dispatch) => {
     console.log('action');
 
-    Axios
+    /*Axios
         .get('/devices.json')
         .then((res) => {
             dispatch({
@@ -16,7 +16,23 @@ export const getAllDevices = () => (dispatch) => {
         })
         .catch((err) => {
             console.log('An error occurred!', err);
+        });*/
+
+    fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device', {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem('token'),
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+    }).then((response) =>{
+        return response.json();
+    }).then((devices) => {
+        console.log(devices);
+        dispatch({
+            type: deviceAction.GET_ALL_DEVICES,
+            payload: devices
         });
+    })
 };
 
 export const changeStatusToWork = (device) => {

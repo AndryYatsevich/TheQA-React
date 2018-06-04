@@ -70,13 +70,13 @@ class Journal extends React.Component {
     };
 
     renderDeviceButton = (el) => {
-        if (el.status === 0) {
+        if (el.state === 'FREE') {
             return <RaisedButton label="Взять в работу" backgroundColor={"#9dc02a"} onClick={() => this.takeToWork(el)}/>
         }
-        if(el.status === 1) {
+        if(el.state === 'TAKEN') {
             return <RaisedButton label="Сдать" backgroundColor={"red"} onClick={() => this.returnDevice(el)}/>
         }
-        if (el.status === 2) {
+        if (el.state === 'WAIT') {
             setTimeout(() => {
                return this.acceptAdmin(el);
             },10000);
@@ -87,16 +87,16 @@ class Journal extends React.Component {
 
     renderDevicesTable = (array) => (array && array.map((el) => {
 
-        console.log('takoe');
+        console.log('takoe', array);
         return <TableRow
             hoverable={true}
 
         key={el.id}>
-            <TableRowColumn>{el.title}</TableRowColumn>
-            <TableRowColumn>{el.os}{el.osVersion}</TableRowColumn>
-            <TableRowColumn>{el.resolutionScreen}</TableRowColumn>
+            <TableRowColumn>{el.name}</TableRowColumn>
+            <TableRowColumn>{el.os}{el.description}</TableRowColumn>
+            <TableRowColumn>{el.screenResolution}</TableRowColumn>
             <TableRowColumn>{this.renderDeviceButton(el)} </TableRowColumn>
-            <TableRowColumn> { el.status === 1 ? <div>{el.userName}</div> : ''} </TableRowColumn>
+            <TableRowColumn> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableRowColumn>
             <TableRowColumn> </TableRowColumn>
             <TableRowColumn> </TableRowColumn>
             <TableRowColumn> {el.comment}</TableRowColumn>

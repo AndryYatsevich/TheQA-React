@@ -18,7 +18,7 @@ export const getAllDevices = () => (dispatch) => {
             console.log('An error occurred!', err);
         });*/
 
-    fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device', {
+    fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device?view=device-with-all', {
         method: "GET",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem('token'),

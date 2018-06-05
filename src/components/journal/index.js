@@ -88,12 +88,13 @@ class Journal extends React.Component {
     renderDevicesTable = (array) => (array && array.map((el) => {
 
         console.log('takoe', array);
+        console.log(el.deviceOs);
         return <TableRow
             hoverable={true}
 
         key={el.id}>
             <TableRowColumn>{el.name}</TableRowColumn>
-            <TableRowColumn>{el.os}{el.description}</TableRowColumn>
+            <TableRowColumn>{el.deviceOs.name} {el.description}</TableRowColumn>
             <TableRowColumn>{el.screenResolution}</TableRowColumn>
             <TableRowColumn>{this.renderDeviceButton(el)} </TableRowColumn>
             <TableRowColumn> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableRowColumn>

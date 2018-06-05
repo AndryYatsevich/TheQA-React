@@ -52,12 +52,12 @@ class Home extends React.Component {
 
     addDevice = () => {
         let device = {
-            name: "SonyФяфяф",
+            name: "Азазяшка",
             deviceOs: {
                 _entityName: "testersjournal$OperationSystem",
-                _instanceName: "Android",
-                id: "bad73888-c176-a6ff-fc30-e3441ea7ced3",
-                name: "Android"
+
+                id: "0f788d26-6e28-e016-4fa5-c957358e899a",
+
             }
         };
         let xhr = new XMLHttpRequest();

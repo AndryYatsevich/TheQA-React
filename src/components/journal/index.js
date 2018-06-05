@@ -17,13 +17,17 @@ class Journal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showCheckboxes: false};
+            showCheckboxes: false,
+            authorization: true};
     }
 
     componentDidMount() {
         console.log('componenDidMount');
-        this.props.getAllDevices();
-
+        if (localStorage.getItem('token')){
+            this.props.getAllDevices();
+        } else {
+            this.setState({authorization: false})
+        }
     }
 
     takeToWork = (el) => {
@@ -115,6 +119,7 @@ class Journal extends React.Component {
                     <Col xs={12}>
 
                             <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
+                        {(!this.state.authorization) ? <div>Авторизуйтесь в системе.</div> :
                             <Table
                                 style={tableStyle}>
                                 <TableHeader
@@ -150,6 +155,7 @@ class Journal extends React.Component {
                                     </TableRow>
                                 </TableBody>
                             </Table>
+                        }
 
                     </Col>
                 </Row>

@@ -17,20 +17,24 @@ import rootReducer from './rootReducer';
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
+const RouteWishApp = (props) => {
+    const {Component} = props;
+    return <Route {...props} component={() => {
+        return <App><Component/></App>;
+    }}/>
+};
 
 
 ReactDOM.render(
     <Provider store={store}>
         <Router>
-            <App>
-                <Switch>
-                    <Route exact path='/' component={Home}/>
-                    <Route path='/journal' component={Journal}/>
-                    <Route path='/settings' component={Settings} />
-                    <Route path='/history' component={History} />
-                    <Route path='/info' component={Info} />
-                </Switch>
-            </App>
+            <Switch>
+                <RouteWishApp exact path='/' Component={Home}/>
+                <RouteWishApp path='/journal' Component={Journal}/>
+                <RouteWishApp path='/settings' Component={Settings} />
+                <RouteWishApp path='/history' Component={History} />
+                <RouteWishApp path='/info' Component={Info} />
+            </Switch>
         </Router>
     </Provider>,
     document.getElementById('root'));

@@ -7,7 +7,7 @@ import AppBar from 'material-ui/AppBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-
+import Home from './components/home';
 import {connect} from 'react-redux';
 import {getUserInfo} from './components/home/action';
 
@@ -16,16 +16,22 @@ class App extends Component {
         super(props);
         this.state = {
             open: false,
-            route: window.location.hash.substr(1)
+            route: window.location.hash.substr(1),
+            authorization: true
         };
     }
 
        componentWillMount() {
             if (localStorage.getItem('token')) {
+                console.log('++++++++++++++++++++++++++++++++App.js++++++++++++++++++++++++++');
                 console.log(localStorage.getItem('token'));
                 this.props.getUserInfo();
+                this.setState({authorization: true})
+            }else {
+                this.setState({authorization: false})
             }
         }
+
 
     componentDidMount() {
         window.addEventListener('hashchange', () => {
@@ -34,6 +40,12 @@ class App extends Component {
             })
         });
     }
+
+    componentWillReceiveProps() {
+        if (localStorage.getItem('token')) {
+            this.setState({authorization: true});
+        }
+    };
 
     handleToggle = (event, open) => {
         console.log(event.type, open);
@@ -77,7 +89,9 @@ class App extends Component {
                 </Row>
                 <Row>
                     <Col xs={12}>
-                        {this.props.children}
+                        {(!this.state.authorization) ? <Home/> :
+                            this.props.children
+                        }
                     </Col>
                 </Row>
             </Grid>
@@ -85,8 +99,12 @@ class App extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+userInfo: state.userInfo
+});
+
 /*export default App;*/
 
-export default connect(null, {
+export default connect(mapStateToProps, {
     getUserInfo
 })(App);

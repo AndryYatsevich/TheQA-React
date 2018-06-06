@@ -5,6 +5,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {getUserInfo} from './action';
+import services from '../../common/services';
+import {actionUserAuth} from '../../common/action';
 
 class Home extends React.Component {
     constructor(props) {
@@ -16,12 +18,6 @@ class Home extends React.Component {
         }
     }
 
-    /*    componentWillMount() {
-            if (localStorage.getItem('token')) {
-                console.log(localStorage.getItem('token'));
-                this.props.getUserInfo();
-            }
-        }*/
 
     operationsystems = () => {
         console.log(this.props.userInfo.name);
@@ -68,6 +64,28 @@ class Home extends React.Component {
 
     };
 
+    changeDevice = () => {
+        let device = {
+            name: "Азазяшка"
+        };
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device/2d138510-d1b7-1e77-a8cf-6beb4fb16cc8', true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        //xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(device));
+    };
+
+    deleteDevice = () => {
+        let device = {
+            name: "Азазяшка"
+        };
+        let xhr = new XMLHttpRequest();
+        xhr.open('DELETE', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device/2d138510-d1b7-1e77-a8cf-6beb4fb16cc8', true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        //xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(device));
+    };
+
     getRole = () => {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', 'http://localhost:8080/app/rest/v2/permissions', true);
@@ -89,9 +107,12 @@ class Home extends React.Component {
         };
     };
 
-    authorization = (e) => {
+  authorization = (e) => {
         e.preventDefault();
-        this.props.getUserInfo(this.state.username, this.state.password);
+        console.log('----------------------', services);
+       // async function() {}
+      this.props.actionUserAuth(this.state.username, this.state.password);
+        //services.userAuth(this.state.username, this.state.password);
 
         /* let xhr = new XMLHttpRequest();
          xhr.open('POST', 'http://localhost:8080/app/rest/v2/oauth/token', true);
@@ -139,7 +160,8 @@ class Home extends React.Component {
             <Grid className={'content-height'}>
                 {localStorage.getItem('token') ? <MuiThemeProvider>
                         <div>
-                            Hello {this.props.userInfo.name}
+                            {console.log(this.props.userInfo)}
+                            Hello {this.props.userInfo && this.props.userInfo.name}
                             <RaisedButton type={'button'} label="Выйти" style={style}
                                           backgroundColor={'#9dc02a'}
                                           onClick={this.logout}/>
@@ -152,6 +174,12 @@ class Home extends React.Component {
                             <RaisedButton type={'button'} label="Получить роли" style={style}
                                           backgroundColor={'#9dc02a'}
                                           onClick={this.getRole}/>
+                            <RaisedButton type={'button'} label="Изменить чего-нибудь" style={style}
+                                          backgroundColor={'#9dc02a'}
+                                          onClick={this.changeDevice}/>
+                            <RaisedButton type={'button'} label="Удалить чего-нибудь" style={style}
+                                          backgroundColor={'#9dc02a'}
+                                          onClick={this.deleteDevice}/>
                         </div>
                     </MuiThemeProvider> :
                     <Row>
@@ -198,7 +226,7 @@ class Home extends React.Component {
 
 const mapStateToProps = (state) => ({
     devices: state.devices,
-    userInfo: state.userInfo
+    userInfo: state.common.userInfo
 });
 
 /*const mapDispatchToProps = (dispatch) => ({
@@ -206,5 +234,6 @@ const mapStateToProps = (state) => ({
 
 });*/
 export default connect(mapStateToProps, {
-    getUserInfo
+    getUserInfo,
+    actionUserAuth
 })(Home);

@@ -7,6 +7,15 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {connect} from "react-redux";
 import {getDeviceOS} from "../settings/action";
+import {getAllDevice} from "../../common/action";
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+} from 'material-ui/Table';
 
 class Settings extends React.Component {
     constructor(props) {
@@ -19,6 +28,7 @@ class Settings extends React.Component {
 
     componentDidMount () {
         this.props.getDeviceOS();
+        this.props.getAllDevice();
     }
     showAddComponent(componentTitle) {
         if (componentTitle === 'user') {
@@ -76,6 +86,22 @@ class Settings extends React.Component {
 
     };
 
+    renderDevicesTable = (array) => (array && array.map((el) => {
+
+        console.log('takoe', array);
+        console.log(el.deviceOs);
+        return <TableRow
+            hoverable={true}
+
+            key={el.id}>
+            <TableRowColumn>{el.name}</TableRowColumn>
+            <TableRowColumn>{el.deviceOs.name} {el.description}</TableRowColumn>
+            <TableRowColumn>{el.screenResolution}</TableRowColumn>
+            <TableRowColumn> </TableRowColumn>
+            <TableRowColumn> {el.comment}</TableRowColumn>
+        </TableRow>
+    }));
+
     render() {
         const style = {
             margin: 12,
@@ -85,6 +111,9 @@ class Settings extends React.Component {
             color: "#9dc02a",
             borderColor: "#9dc02a"
         };
+        const tableStyle = {
+            backgroundColor: 'rgba(255,255,255,.8)'
+        };
         return (
             <Grid className={'content-height'}>
                 <Row>
@@ -93,7 +122,7 @@ class Settings extends React.Component {
                         <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
                         <div>
                             <MuiThemeProvider>
-                                <RaisedButton label="Добавить устройство" style={style} backgroundColor={'#9dc02a'}
+                                <RaisedButton label="Редактировать список устройств" style={style} backgroundColor={'#9dc02a'}
                                               onClick={() => this.showAddComponent('device')}/>
                             </MuiThemeProvider>
                         </div>
@@ -196,6 +225,53 @@ class Settings extends React.Component {
                                 </div> : ''}
                     </Col>
                 </Row>
+                <Row>
+                    <Col xs={12}>
+                        {(this.state.showComponent === 'user') ?
+                            <div>
+                                <MuiThemeProvider>
+                                    Список пользователей. Будет здесь, когда-нибудь, не знаю когда.
+                                </MuiThemeProvider>
+                            </div> : (this.state.showComponent === 'device') ?
+                                <div>
+                                    <MuiThemeProvider>
+                                        <Table
+                                            style={tableStyle}>
+                                            <TableHeader
+                                                displaySelectAll={this.state.showCheckboxes}
+                                                adjustForCheckbox={this.state.showCheckboxes}>
+                                                <TableRow>
+                                                    <TableHeaderColumn>Устройство</TableHeaderColumn>
+                                                    <TableHeaderColumn>Версия ОС</TableHeaderColumn>
+                                                    <TableHeaderColumn>Разрешение экрана</TableHeaderColumn>
+                                                    <TableHeaderColumn> </TableHeaderColumn>
+                                                    <TableHeaderColumn>Комментарий</TableHeaderColumn>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody
+                                                displayRowCheckbox={this.state.showCheckboxes}
+
+                                            >
+                                                {console.log('dasdsd', this.props)}
+                                                { this.renderDevicesTable(this.props.devices)}
+                                                <TableRow
+                                                    hoverable={true}>
+                                                    <TableRowColumn>Sony Xperia ZR C5502</TableRowColumn>
+                                                    <TableRowColumn>4.4.4</TableRowColumn>
+                                                    <TableRowColumn>1280x720</TableRowColumn>
+                                                    <TableRowColumn> </TableRowColumn>
+                                                    <TableRowColumn> </TableRowColumn>
+                                                    <TableRowColumn> </TableRowColumn>
+                                                    <TableRowColumn> </TableRowColumn>
+                                                    <TableRowColumn> </TableRowColumn>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </MuiThemeProvider>
+                                </div> : ''}
+
+                    </Col>
+                </Row>
             </Grid>
         );
     }
@@ -211,5 +287,6 @@ const mapStateToProps = (state) => ({
 
 });*/
 export default connect(mapStateToProps, {
-    getDeviceOS
+    getDeviceOS,
+    getAllDevice
 })(Settings);

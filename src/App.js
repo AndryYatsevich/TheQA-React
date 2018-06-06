@@ -9,7 +9,7 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import Home from './components/home';
 import {connect} from 'react-redux';
-import {getUserInfo} from './components/home/action';
+import {actionGetUserInfo} from "./common/action";
 
 class App extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class App extends Component {
             if (localStorage.getItem('token')) {
                 console.log('++++++++++++++++++++++++++++++++App.js++++++++++++++++++++++++++');
                 console.log(localStorage.getItem('token'));
-                this.props.getUserInfo();
+                this.props.actionGetUserInfo();
                 this.setState({authorization: true})
             }else {
                 this.setState({authorization: false})
@@ -106,5 +106,5 @@ userInfo: state.userInfo
 /*export default App;*/
 
 export default connect(mapStateToProps, {
-    getUserInfo
+    actionGetUserInfo
 })(App);

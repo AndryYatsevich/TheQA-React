@@ -10,7 +10,8 @@ import {
 } from 'material-ui/Table';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {connect} from 'react-redux';
-import {getAllDevices, changeStatusToWork} from './action';
+import {changeStatusToWork} from './action';
+import {getAllDevice} from "../../common/action";
 import RaisedButton from 'material-ui/RaisedButton';
 
 class Journal extends React.Component {
@@ -24,7 +25,7 @@ class Journal extends React.Component {
     componentDidMount() {
         console.log('componenDidMount');
         if (localStorage.getItem('token')){
-            this.props.getAllDevices();
+            this.props.getAllDevice();
         } else {
             this.setState({authorization: false})
         }
@@ -168,7 +169,8 @@ class Journal extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  devices: state.devices
+  devices: state.common.devices
+
 });
 
 /*const mapDispatchToProps = (dispatch) => ({
@@ -176,6 +178,6 @@ const mapStateToProps = (state) => ({
 
 });*/
 export default connect(mapStateToProps, {
-    getAllDevices,
+    getAllDevice,
     changeStatusToWork
 }) (Journal);

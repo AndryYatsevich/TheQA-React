@@ -1,7 +1,7 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
+import TextField from '@material-ui/core/TextField';
+import { MuiThemeProvider} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {getUserInfo} from './action';
@@ -162,24 +162,18 @@ class Home extends React.Component {
                         <div>
                             {console.log(this.props.userInfo)}
                             Hello {this.props.userInfo && this.props.userInfo.name}
-                            <RaisedButton type={'button'} label="Выйти" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.logout}/>
-                            <RaisedButton type={'button'} label="Запросить чегонибудь" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.operationsystems}/>
-                            <RaisedButton type={'button'} label="Добавить устройство" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.addDevice}/>
-                            <RaisedButton type={'button'} label="Получить роли" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.getRole}/>
-                            <RaisedButton type={'button'} label="Изменить чего-нибудь" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.changeDevice}/>
-                            <RaisedButton type={'button'} label="Удалить чего-нибудь" style={style}
-                                          backgroundColor={'#9dc02a'}
-                                          onClick={this.deleteDevice}/>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.logout}>Выйти</Button>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.operationsystems}>Запросить чегонибудь</Button>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.addDevice}>Добавить устройство</Button>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.getRole}>Получить роли</Button>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.changeDevice}>Изменить чего-нибудь</Button>
+                            <Button style={style} backgroundColor={'#9dc02a'}
+                                    onClick={this.deleteDevice}>Удалить чего-нибудь</Button>
                         </div>
                     </MuiThemeProvider> :
                     <Row>
@@ -207,12 +201,10 @@ class Home extends React.Component {
                                         type={'password'}
                                     />
 
-                                    <RaisedButton type={'submit'} label="Войти в систему" style={style}
-                                                  backgroundColor={'#9dc02a'}
-                                                  onClick={(e) => this.authorization(e)}/>
-                                    <RaisedButton type={'button'} label="Запросить чегонибудь" style={style}
-                                                  backgroundColor={'#9dc02a'}
-                                                  onClick={this.operationsystems}/>
+                                    <Button style={style} backgroundColor={'#9dc02a'}
+                                            onClick={(e) => this.authorization(e)}>Войти в систему</Button>
+                                    <Button style={style} backgroundColor={'#9dc02a'}
+                                            onClick={this.operationsystems}>Запросить чегонибудь</Button>
 
                                 </form>
                             </MuiThemeProvider>

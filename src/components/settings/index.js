@@ -1,28 +1,26 @@
 import React from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Button from '@material-ui/core/Button';
+import { MuiThemeProvider} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import List from '@material-ui/core/List';
 import {connect} from "react-redux";
 import {getDeviceOS} from "../settings/action";
 import {getAllDevice} from "../../common/action";
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
 
 class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             showComponent: '',
-            value: 0
+            value: 0,
+            showCheckboxes: false,
         }
     }
 
@@ -51,7 +49,7 @@ class Settings extends React.Component {
     handleChange = (event, index, value) => this.setState({value});
 
     renderOsSelectedField = (array) => (array && array.map((el) => {
-       return <MenuItem value={el.id} primaryText={el.name}/>
+       return <List value={el.id} primaryText={el.name}/>
     }));
 
     changeDeviceTitle = (e) => {
@@ -86,20 +84,24 @@ class Settings extends React.Component {
 
     };
 
-    renderDevicesTable = (array) => (array && array.map((el) => {
+    handleClick = (event, id) => {
+      console.log('-----------', event, id);
+    };
+
+    renderDevicesTable = (array) => (array && array.map((el, key) => {
 
         console.log('takoe', array);
         console.log(el.deviceOs);
-        return <TableRow
-            hoverable={true}
-
-            key={el.id}>
-            <TableRowColumn>{el.name}</TableRowColumn>
-            <TableRowColumn>{el.deviceOs.name} {el.description}</TableRowColumn>
-            <TableRowColumn>{el.screenResolution}</TableRowColumn>
-            <TableRowColumn> </TableRowColumn>
-            <TableRowColumn> {el.comment}</TableRowColumn>
-        </TableRow>
+        return (<TableRow
+            hover
+            onClick={event => this.handleClick(event, el.id)}
+            // role={"checkbox"}
+            key={key}>
+            <TableCell>{el.name}</TableCell>
+            <TableCell>{el.deviceOs.name} {el.description}</TableCell>
+            <TableCell>{el.screenResolution}</TableCell>
+            <TableCell> {el.comment}</TableCell>
+        </TableRow>)
     }));
 
     render() {
@@ -122,13 +124,13 @@ class Settings extends React.Component {
                         <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
                         <div>
                             <MuiThemeProvider>
-                                <RaisedButton label="Редактировать список устройств" style={style} backgroundColor={'#9dc02a'}
+                                <Button label="Редактировать список устройств" style={style} backgroundColor={'#9dc02a'}
                                               onClick={() => this.showAddComponent('device')}/>
                             </MuiThemeProvider>
                         </div>
                         <div>
                             <MuiThemeProvider>
-                                <RaisedButton label="Добавить пользователя" style={style} backgroundColor={'#9dc02a'}
+                                <Button label="Добавить пользователя" style={style} backgroundColor={'#9dc02a'}
                                               onClick={() => this.showAddComponent('user')}/>
                             </MuiThemeProvider>
                         </div>
@@ -155,20 +157,20 @@ class Settings extends React.Component {
                                             floatingLabelFocusStyle={inputStyle}
                                         />
                                     </div>
-                                    <SelectField
+                                    <Select
                                         floatingLabelText="Роль"
                                         value={this.state.value}
                                         onChange={this.handleChange}
                                         selectedMenuItemStyle={inputStyle}
                                     >
-                                        <MenuItem value={1} primaryText="Тестировщик"/>
-                                        <MenuItem value={2} primaryText="Team Lead"/>
-                                        <MenuItem value={3} primaryText="Admin"/>
-                                    </SelectField>
+                                        <List value={1} primaryText="Тестировщик"/>
+                                        <List value={2} primaryText="Team Lead"/>
+                                        <List value={3} primaryText="Admin"/>
+                                    </Select>
                                     <div>
-                                        <RaisedButton label="Ок" style={style} backgroundColor={'#9dc02a'}
+                                        <Button label="Ок" style={style} backgroundColor={'#9dc02a'}
                                                       onClick={() => this.showAddComponent('user')}/>
-                                        <RaisedButton label="Отмена" style={style} backgroundColor={'#9dc02a'}
+                                        <Button label="Отмена" style={style} backgroundColor={'#9dc02a'}
                                                       onClick={() => this.showAddComponent('empty')}/>
                                     </div>
                                 </MuiThemeProvider>
@@ -185,14 +187,14 @@ class Settings extends React.Component {
                                                 onChange={this.changeDeviceTitle}
                                             />
                                         </div>
-                                        <SelectField
+                                        <Select
                                             floatingLabelText="Операционная система"
                                             value={this.state.value}
                                             onChange={this.handleChange}
                                         >
                                             {console.log('++++++++++++++++++', this.props, this.state)}
                                             {this.renderOsSelectedField(this.props.deviceOS)}
-                                        </SelectField>
+                                        </Select>
                                         <div>
                                             <TextField
                                                 hintText="Версия ОС"
@@ -216,9 +218,9 @@ class Settings extends React.Component {
 
                                         <div>
 
-                                            <RaisedButton label="Ок" style={style} backgroundColor={'#9dc02a'}
+                                            <Button label="Ок" style={style} backgroundColor={'#9dc02a'}
                                                           onClick={this.addDevice}/>
-                                            <RaisedButton label="Отмена" style={style} backgroundColor={'#9dc02a'}
+                                            <Button label="Отмена" style={style} backgroundColor={'#9dc02a'}
                                                           onClick={() => this.showAddComponent('empty')}/>
                                         </div>
                                     </MuiThemeProvider>
@@ -237,17 +239,16 @@ class Settings extends React.Component {
                                     <MuiThemeProvider>
                                         <Table
                                             style={tableStyle}>
-                                            <TableHeader
+                                            <TableHead
                                                 displaySelectAll={this.state.showCheckboxes}
                                                 adjustForCheckbox={this.state.showCheckboxes}>
                                                 <TableRow>
-                                                    <TableHeaderColumn>Устройство</TableHeaderColumn>
-                                                    <TableHeaderColumn>Версия ОС</TableHeaderColumn>
-                                                    <TableHeaderColumn>Разрешение экрана</TableHeaderColumn>
-                                                    <TableHeaderColumn> </TableHeaderColumn>
-                                                    <TableHeaderColumn>Комментарий</TableHeaderColumn>
+                                                    <TableCell>Устройство</TableCell>
+                                                    <TableCell>Версия ОС</TableCell>
+                                                    <TableCell>Разрешение экрана</TableCell>
+                                                    <TableCell>Комментарий</TableCell>
                                                 </TableRow>
-                                            </TableHeader>
+                                            </TableHead>
                                             <TableBody
                                                 displayRowCheckbox={this.state.showCheckboxes}
 
@@ -256,14 +257,10 @@ class Settings extends React.Component {
                                                 { this.renderDevicesTable(this.props.devices)}
                                                 <TableRow
                                                     hoverable={true}>
-                                                    <TableRowColumn>Sony Xperia ZR C5502</TableRowColumn>
-                                                    <TableRowColumn>4.4.4</TableRowColumn>
-                                                    <TableRowColumn>1280x720</TableRowColumn>
-                                                    <TableRowColumn> </TableRowColumn>
-                                                    <TableRowColumn> </TableRowColumn>
-                                                    <TableRowColumn> </TableRowColumn>
-                                                    <TableRowColumn> </TableRowColumn>
-                                                    <TableRowColumn> </TableRowColumn>
+                                                    <TableCell>Sony Xperia ZR C5502</TableCell>
+                                                    <TableCell>4.4.4</TableCell>
+                                                    <TableCell>1280x720</TableCell>
+                                                    <TableCell> </TableCell>
                                                 </TableRow>
                                             </TableBody>
                                         </Table>
@@ -279,7 +276,8 @@ class Settings extends React.Component {
 
 const mapStateToProps = (state) => ({
     deviceOS: state.deviceOS,
-    userInfo: state.userInfo
+    userInfo: state.userInfo,
+    devices: state.common.devices
 });
 
 /*const mapDispatchToProps = (dispatch) => ({

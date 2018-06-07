@@ -1,18 +1,16 @@
 import React from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import { MuiThemeProvider} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 import {changeStatusToWork} from './action';
 import {getAllDevice} from "../../common/action";
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 class Journal extends React.Component {
     constructor(props) {
@@ -76,10 +74,10 @@ class Journal extends React.Component {
 
     renderDeviceButton = (el) => {
         if (el.state === 'FREE') {
-            return <RaisedButton label="Взять в работу" backgroundColor={"#9dc02a"} onClick={() => this.takeToWork(el)}/>
+            return <Button label="Взять в работу" backgroundColor={"#9dc02a"} onClick={() => this.takeToWork(el)}/>
         }
         if(el.state === 'TAKEN') {
-            return <RaisedButton label="Сдать" backgroundColor={"red"} onClick={() => this.returnDevice(el)}/>
+            return <Button label="Сдать" backgroundColor={"red"} onClick={() => this.returnDevice(el)}/>
         }
         if (el.state === 'WAIT') {
             setTimeout(() => {
@@ -98,14 +96,14 @@ class Journal extends React.Component {
             hoverable={true}
 
         key={el.id}>
-            <TableRowColumn>{el.name}</TableRowColumn>
-            <TableRowColumn>{el.deviceOs.name} {el.description}</TableRowColumn>
-            <TableRowColumn>{el.screenResolution}</TableRowColumn>
-            <TableRowColumn>{this.renderDeviceButton(el)} </TableRowColumn>
-            <TableRowColumn> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableRowColumn>
-            <TableRowColumn> </TableRowColumn>
-            <TableRowColumn> </TableRowColumn>
-            <TableRowColumn> {el.comment}</TableRowColumn>
+            <TableCell>{el.name}</TableCell>
+            <TableCell>{el.deviceOs.name} {el.description}</TableCell>
+            <TableCell>{el.screenResolution}</TableCell>
+            <TableCell>{this.renderDeviceButton(el)} </TableCell>
+            <TableCell> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableCell>
+            <TableCell> </TableCell>
+            <TableCell> </TableCell>
+            <TableCell> {el.comment}</TableCell>
         </TableRow>
     }));
 
@@ -123,20 +121,20 @@ class Journal extends React.Component {
                         {(!this.state.authorization) ? <div>Авторизуйтесь в системе.</div> :
                             <Table
                                 style={tableStyle}>
-                                <TableHeader
+                                <TableHead
                                     displaySelectAll={this.state.showCheckboxes}
                                     adjustForCheckbox={this.state.showCheckboxes}>
                                     <TableRow>
-                                        <TableHeaderColumn>Устройство</TableHeaderColumn>
-                                        <TableHeaderColumn>Версия ОС</TableHeaderColumn>
-                                        <TableHeaderColumn>Разрешение экрана</TableHeaderColumn>
-                                        <TableHeaderColumn>Статус</TableHeaderColumn>
-                                        <TableHeaderColumn>Взял в работу</TableHeaderColumn>
-                                        <TableHeaderColumn>Дата/Время</TableHeaderColumn>
-                                        <TableHeaderColumn> </TableHeaderColumn>
-                                        <TableHeaderColumn>Комментарий</TableHeaderColumn>
+                                        <TableCell>Устройство</TableCell>
+                                        <TableCell>Версия ОС</TableCell>
+                                        <TableCell>Разрешение экрана</TableCell>
+                                        <TableCell>Статус</TableCell>
+                                        <TableCell>Взял в работу</TableCell>
+                                        <TableCell>Дата/Время</TableCell>
+                                        <TableCell> </TableCell>
+                                        <TableCell>Комментарий</TableCell>
                                     </TableRow>
-                                </TableHeader>
+                                </TableHead>
                                 <TableBody
                                     displayRowCheckbox={this.state.showCheckboxes}
 
@@ -145,14 +143,14 @@ class Journal extends React.Component {
                                     { this.renderDevicesTable(this.props.devices)}
                                     <TableRow
                                         hoverable={true}>
-                                        <TableRowColumn>Sony Xperia ZR C5502</TableRowColumn>
-                                        <TableRowColumn>4.4.4</TableRowColumn>
-                                        <TableRowColumn>1280x720</TableRowColumn>
-                                        <TableRowColumn> </TableRowColumn>
-                                        <TableRowColumn> </TableRowColumn>
-                                        <TableRowColumn> </TableRowColumn>
-                                        <TableRowColumn> </TableRowColumn>
-                                        <TableRowColumn> </TableRowColumn>
+                                        <TableCell>Sony Xperia ZR C5502</TableCell>
+                                        <TableCell>4.4.4</TableCell>
+                                        <TableCell>1280x720</TableCell>
+                                        <TableCell> </TableCell>
+                                        <TableCell> </TableCell>
+                                        <TableCell> </TableCell>
+                                        <TableCell> </TableCell>
+                                        <TableCell> </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

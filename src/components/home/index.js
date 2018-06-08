@@ -7,6 +7,16 @@ import {connect} from 'react-redux';
 import {getUserInfo} from './action';
 import services from '../../common/services';
 import {actionUserAuth} from '../../common/action';
+import {createMuiTheme} from "@material-ui/core/styles/index";
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#9dc02a",
+            }, // Purple and green play nicely together.
+        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+    },
+});
 
 class Home extends React.Component {
     constructor(props) {
@@ -149,8 +159,7 @@ class Home extends React.Component {
 
     render() {
         const style = {
-            margin: 12,
-            backgroundColor: "#9dc02a"
+            margin: 12
         };
         const inputStyle = {
             color: "#9dc02a",
@@ -158,52 +167,48 @@ class Home extends React.Component {
         };
         return (
             <Grid className={'content-height'}>
-                {localStorage.getItem('token') ? <MuiThemeProvider>
-                        <div>
+                {localStorage.getItem('token') ? <MuiThemeProvider theme={theme}>
+                        <div style={style}>
                             {console.log(this.props.userInfo)}
                             Hello {this.props.userInfo && this.props.userInfo.name}
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary' style={style}
                                     onClick={this.logout}>Выйти</Button>
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary' style={style}
                                     onClick={this.operationsystems}>Запросить чегонибудь</Button>
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary' style={style}
                                     onClick={this.addDevice}>Добавить устройство</Button>
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary' style={style}
                                     onClick={this.getRole}>Получить роли</Button>
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary'
                                     onClick={this.changeDevice}>Изменить чего-нибудь</Button>
-                            <Button style={style} backgroundColor={'#9dc02a'}
+                            <Button variant="contained" color='primary' style={style}
                                     onClick={this.deleteDevice}>Удалить чего-нибудь</Button>
                         </div>
                     </MuiThemeProvider> :
                     <Row>
                         <Col xsOffset={5} xs={4}>
                             <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
-                            <MuiThemeProvider>
+                            <MuiThemeProvider theme={theme}>
                                 <h1>Добрый день!</h1>
                                 <form>
                                     <TextField
-                                        hintText="Логин"
-                                        floatingLabelText="Введите логин"
-                                        hintStyle={inputStyle}
-                                        underlineFocusStyle={inputStyle}
-                                        floatingLabelFocusStyle={inputStyle}
+                                        label="Логин"
+                                        autoComplete="off"
+                                        className={inputStyle}
                                         name={'username'}
                                         onChange={this.nameChange}
                                     />
                                     <TextField
-                                        hintText="Пароль"
+                                        label="Пароль"
                                         floatingLabelText="Введите пароль"
-                                        hintStyle={inputStyle}
-                                        underlineFocusStyle={inputStyle}
-                                        floatingLabelFocusStyle={inputStyle}
+                                        className={inputStyle}
                                         onChange={this.passwordChange}
                                         type={'password'}
                                     />
 
-                                    <Button style={style} backgroundColor={'#9dc02a'}
+                                    <Button variant="contained" color='primary' style={style}
                                             onClick={(e) => this.authorization(e)}>Войти в систему</Button>
-                                    <Button style={style} backgroundColor={'#9dc02a'}
+                                    <Button variant="contained" color='primary' style={style}
                                             onClick={this.operationsystems}>Запросить чегонибудь</Button>
 
                                 </form>

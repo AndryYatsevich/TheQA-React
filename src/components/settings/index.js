@@ -13,6 +13,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import {createMuiTheme} from "@material-ui/core/styles/index";
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#9dc02a",
+        }, // Purple and green play nicely together.
+        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+    },
+});
 
 class Settings extends React.Component {
     constructor(props) {
@@ -49,7 +62,7 @@ class Settings extends React.Component {
     handleChange = (event, index, value) => this.setState({value});
 
     renderOsSelectedField = (array) => (array && array.map((el) => {
-       return <List value={el.id} primaryText={el.name}/>
+       return <MenuItem value={el.id}>{el.name}</MenuItem>
     }));
 
     changeDeviceTitle = (e) => {
@@ -123,105 +136,98 @@ class Settings extends React.Component {
 
                         <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
                         <div>
-                            <MuiThemeProvider>
-                                <Button label="Редактировать список устройств" style={style} backgroundColor={'#9dc02a'}
-                                              onClick={() => this.showAddComponent('device')}/>
+                            <MuiThemeProvider theme={theme}>
+                                <Button variant="contained" color='primary' style={style}
+                                        onClick={() => this.showAddComponent('device')}>Редактировать список устройств</Button>
                             </MuiThemeProvider>
                         </div>
                         <div>
-                            <MuiThemeProvider>
-                                <Button label="Добавить пользователя" style={style} backgroundColor={'#9dc02a'}
-                                              onClick={() => this.showAddComponent('user')}/>
+                            <MuiThemeProvider theme={theme}>
+                                <Button variant="contained" color='primary' style={style}
+                                        onClick={() => this.showAddComponent('user')}>Добавить пользователя</Button>
                             </MuiThemeProvider>
                         </div>
                     </Col>
                     <Col xs={8}>
                         {(this.state.showComponent === 'user') ?
                             <div>
-                                <MuiThemeProvider>
+                                <MuiThemeProvider theme={theme}>
                                     <div>
                                         <TextField
-                                            hintText="Имя"
-                                            floatingLabelText="Введите имя"
-                                            hintStyle={inputStyle}
-                                            underlineFocusStyle={inputStyle}
-                                            floatingLabelFocusStyle={inputStyle}
+                                            label="Имя"
+                                            className={inputStyle}
                                         />
                                     </div>
                                     <div>
                                         <TextField
-                                            hintText="Фамилия"
-                                            floatingLabelText="Введите фамилию"
-                                            hintStyle={inputStyle}
-                                            underlineFocusStyle={inputStyle}
-                                            floatingLabelFocusStyle={inputStyle}
+                                            label="Фамилия"
+                                            className={inputStyle}
                                         />
                                     </div>
+                                    <FormControl>
+                                    <InputLabel htmlFor="age-simple">Роль</InputLabel>
                                     <Select
-                                        floatingLabelText="Роль"
                                         value={this.state.value}
                                         onChange={this.handleChange}
-                                        selectedMenuItemStyle={inputStyle}
+                                        inputProps={{
+                                            name: 'age',
+                                            id: 'age-simple',
+                                        }}
                                     >
-                                        <List value={1} primaryText="Тестировщик"/>
-                                        <List value={2} primaryText="Team Lead"/>
-                                        <List value={3} primaryText="Admin"/>
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={10}>Тестировщик</MenuItem>
+                                        <MenuItem value={20}>Team Lead</MenuItem>
+                                        <MenuItem value={30}>Admin</MenuItem>
                                     </Select>
+                                    </FormControl>
+
                                     <div>
-                                        <Button label="Ок" style={style} backgroundColor={'#9dc02a'}
-                                                      onClick={() => this.showAddComponent('user')}/>
-                                        <Button label="Отмена" style={style} backgroundColor={'#9dc02a'}
-                                                      onClick={() => this.showAddComponent('empty')}/>
+                                        <Button variant="contained" color='primary' style={style}
+                                                onClick={() => this.showAddComponent('user')}>Добавить</Button>
+                                        <Button variant="contained" color='primary' style={style}
+                                                onClick={() => this.showAddComponent('empty')}>Отмена</Button>
                                     </div>
                                 </MuiThemeProvider>
                             </div> : (this.state.showComponent === 'device') ?
                                 <div>
-                                    <MuiThemeProvider>
+                                    <MuiThemeProvider theme={theme}>
                                         <div>
                                             <TextField
-                                                hintText="Название устройства"
-                                                floatingLabelText="Введите название устройства"
-                                                hintStyle={inputStyle}
-                                                underlineFocusStyle={inputStyle}
-                                                floatingLabelFocusStyle={inputStyle}
+                                                label="Название устройства"
                                                 onChange={this.changeDeviceTitle}
                                             />
                                         </div>
+                                        <FormControl>
+                                            <InputLabel htmlFor="age-simple">Операционная система</InputLabel>
                                         <Select
-                                            floatingLabelText="Операционная система"
                                             value={this.state.value}
                                             onChange={this.handleChange}
                                         >
                                             {console.log('++++++++++++++++++', this.props, this.state)}
                                             {this.renderOsSelectedField(this.props.deviceOS)}
                                         </Select>
+                                        </FormControl>
                                         <div>
                                             <TextField
-                                                hintText="Версия ОС"
-                                                floatingLabelText="Введите версию ОС"
-                                                hintStyle={inputStyle}
-                                                underlineFocusStyle={inputStyle}
-                                                floatingLabelFocusStyle={inputStyle}
+                                                label="Версия ОС"
                                                 onChange={this.changeDescription}
                                             />
                                         </div>
                                         <div>
                                             <TextField
-                                                hintText="Разрешение экрана"
-                                                floatingLabelText="Введите разрешение экрана"
-                                                hintStyle={inputStyle}
-                                                underlineFocusStyle={inputStyle}
-                                                floatingLabelFocusStyle={inputStyle}
+                                                label="Разрешение экрана"
                                                 onChange={this.changeScreenResolution}
                                             />
                                         </div>
 
                                         <div>
 
-                                            <Button label="Ок" style={style} backgroundColor={'#9dc02a'}
-                                                          onClick={this.addDevice}/>
-                                            <Button label="Отмена" style={style} backgroundColor={'#9dc02a'}
-                                                          onClick={() => this.showAddComponent('empty')}/>
+                                            <Button variant="contained" color='primary' style={style}
+                                                    onClick={this.addDevice}>Добавить</Button>
+                                            <Button variant="contained" color='primary' style={style}
+                                                    onClick={() => this.showAddComponent('empty')}>Отмена</Button>
                                         </div>
                                     </MuiThemeProvider>
                                 </div> : ''}
@@ -231,17 +237,15 @@ class Settings extends React.Component {
                     <Col xs={12}>
                         {(this.state.showComponent === 'user') ?
                             <div>
-                                <MuiThemeProvider>
+                                <MuiThemeProvider theme={theme}>
                                     Список пользователей. Будет здесь, когда-нибудь, не знаю когда.
                                 </MuiThemeProvider>
                             </div> : (this.state.showComponent === 'device') ?
                                 <div>
-                                    <MuiThemeProvider>
+                                    <MuiThemeProvider theme={theme}>
                                         <Table
                                             style={tableStyle}>
-                                            <TableHead
-                                                displaySelectAll={this.state.showCheckboxes}
-                                                adjustForCheckbox={this.state.showCheckboxes}>
+                                            <TableHead>
                                                 <TableRow>
                                                     <TableCell>Устройство</TableCell>
                                                     <TableCell>Версия ОС</TableCell>
@@ -249,14 +253,10 @@ class Settings extends React.Component {
                                                     <TableCell>Комментарий</TableCell>
                                                 </TableRow>
                                             </TableHead>
-                                            <TableBody
-                                                displayRowCheckbox={this.state.showCheckboxes}
-
-                                            >
+                                            <TableBody>
                                                 {console.log('dasdsd', this.props)}
                                                 { this.renderDevicesTable(this.props.devices)}
-                                                <TableRow
-                                                    hoverable={true}>
+                                                <TableRow>
                                                     <TableCell>Sony Xperia ZR C5502</TableCell>
                                                     <TableCell>4.4.4</TableCell>
                                                     <TableCell>1280x720</TableCell>

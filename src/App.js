@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import {Link} from 'react-router-dom';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import './App.css';
@@ -8,13 +7,52 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { MuiThemeProvider} from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import ListItem from '@material-ui/core/ListItem';
 import Home from './components/home';
 import {connect} from 'react-redux';
 import {actionGetUserInfo} from "./common/action";
+import { withStyles } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+    palette: {
+        primary: { main: "#9dc02a" }, // Purple and green play nicely together.
+        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+    },
+});
+
+class MyDrawer extends Component {
+    render() {
+const style = {
+    width: 250
+};
+        const { classes, open, handler } = this.props;
+        return (<Drawer  onClick={handler}
+                             open={open} style={{
+                                 visibility: open ? 'visible' : 'hidden'
+                             }}
+
+            ><div className={classes.list}>
+                <Link to={`/journal`} className={'menu-item'} style={style} ><ListItem button
+                    onClick={this.handleClose}><ListItemText primary="Журнал" /></ListItem></Link>
+                <Link to={`/history`} className={'menu-item'}><ListItem button
+                    onClick={this.handleClose}><ListItemText primary="История" /></ListItem></Link>
+                <Link to={`/info`} className={'menu-item'}><ListItem button
+                    onClick={this.handleClose}><ListItemText primary="Инфо" /></ListItem></Link>
+                <Link to={`/settings`} className={'menu-item'}><ListItem button onClick={this.handleClose}><ListItemText primary="Настройки" /></ListItem></Link>
+            </div>
+            </Drawer>
+        )
+    }
+}
+
+const MyDrawer2 = withStyles({
+    list: {
+        width: 250,
+    }})(MyDrawer);
 
 
 class App extends Component {
@@ -23,7 +61,8 @@ class App extends Component {
         this.state = {
             open: false,
             route: window.location.hash.substr(1),
-            authorization: true
+            authorization: true,
+            openMenu: false
         };
     }
 
@@ -53,36 +92,27 @@ class App extends Component {
         }
     };
 
-    handleToggle = (event, open) => {
-        console.log(event.type, open);
+    handleToggle = () => {
         this.setState({open: !this.state.open});
     };
-    handleClose = () => this.setState({open: false});
+    // handleClose = () => this.setState({open: 'false'});
 
+    // toggleDrawer = (side, open) => () => {
+    //     this.setState({
+    //         [side]: open,
+    //     });
+    // };
     render() {
-        const styles = {
-            root: {
-                flexGrow: 1,
-            },
-            flex: {
-                flex: 1,
-            },
-            menuButton: {
-                marginLeft: -12,
-                marginRight: 20,
-            },
-            colorDefault: {
-                backgroundColor: "#9dc02a"
-            }
-        };
+
         return (
             <Grid fluid className={"general-grid"}>
                 <Row>
                     <Col xs={12} className={'general-col'}>
-                        <MuiThemeProvider>
-                            <AppBar position="static" >
+                        {console.log(theme, this.state)}
+                        <MuiThemeProvider theme={theme}>
+                            <AppBar position="static" color={"primary"}>
                                 <Toolbar>
-                                    <IconButton color="inherit" aria-label="Menu">
+                                    <IconButton color="inherit" aria-label="Menu" onClick={this.handleToggle}>
                                         <MenuIcon />
                                     </IconButton>
                                     <Typography variant="title" color="inherit">
@@ -90,30 +120,9 @@ class App extends Component {
                                     </Typography>
                                 </Toolbar>
                             </AppBar>
-                            <AppBar
-                                title="TheQA"
-                                iconClassNameRight="muidocs-icon-navigation-expand-more"
-                                style={styles}
-                                onLeftIconButtonClick={this.handleToggle}
-                            />
-
                         </MuiThemeProvider>
                     </Col>
-                    <MuiThemeProvider>
-                        <Drawer docked={false}
-                                width={200}
-                                open={this.state.open}
-                                onRequestChange={(open) => this.setState({open})}
-                        >
-                            <Link to={`/journal`} className={'menu-item'}><List
-                                onClick={this.handleClose}>Журнал</List></Link>
-                            <Link to={`/history`} className={'menu-item'}><List
-                                onClick={this.handleClose}>История</List></Link>
-                            <Link to={`/info`} className={'menu-item'}><List
-                                onClick={this.handleClose}>Инфо</List></Link>
-                            <Link to={`/settings`} className={'menu-item'}><List onClick={this.handleClose}>Настройки</List></Link>
-                        </Drawer>
-                    </MuiThemeProvider>
+                    <MyDrawer2 open={this.state.open} handler={this.handleToggle}/>
                 </Row>
                 <Row>
                     <Col xs={12}>

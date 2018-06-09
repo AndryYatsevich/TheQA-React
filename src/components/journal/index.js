@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { MuiThemeProvider} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 import {changeStatusToWork} from './action';
-import {getAllDevice} from "../../common/action";
+import {actionGetAllDevice} from "../../common/action";
 import Button from '@material-ui/core/Button';
 
 class Journal extends React.Component {
@@ -23,7 +23,7 @@ class Journal extends React.Component {
     componentDidMount() {
         console.log('componenDidMount');
         if (localStorage.getItem('token')){
-            this.props.getAllDevice();
+            this.props.actionGetAllDevice();
         } else {
             this.setState({authorization: false})
         }
@@ -87,8 +87,11 @@ class Journal extends React.Component {
         }
 
     };
-
-    renderDevicesTable = (array) => (array && array.map((el) => {
+    sortArray = (obj1, obj2) => {
+        if (obj1.createTs < obj2.createTs) return 1;
+        if (obj1.createTs > obj2.createTs) return -1;
+    };
+    renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el) => {
 
         console.log('takoe', array);
         console.log(el.deviceOs);
@@ -176,6 +179,6 @@ const mapStateToProps = (state) => ({
 
 });*/
 export default connect(mapStateToProps, {
-    getAllDevice,
+    actionGetAllDevice,
     changeStatusToWork
 }) (Journal);

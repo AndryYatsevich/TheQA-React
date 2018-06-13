@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import List from '@material-ui/core/List';
 import {connect} from "react-redux";
-import {getDeviceOS, getAllUsers} from "../settings/action";
+import {getDeviceOS, getAllUsers, actionAddNewUser} from "../settings/action";
 import {actionGetAllDevice, actionAddNewDevice, actionDeleteDevice} from "../../common/action";
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -82,6 +82,26 @@ class Settings extends React.Component {
         this.setState({screenResolution: e.target.value});
     };
 
+    changeLogin = (e) => {
+        this.setState({login: e.target.value});
+    };
+
+    changeLastName = (e) => {
+        this.setState({lastName: e.target.value});
+    };
+
+    changeFirstName = (e) => {
+        this.setState({firstName: e.target.value});
+    };
+
+    changeMiddleName = (e) => {
+        this.setState({middleName: e.target.value});
+    };
+
+    changePassword = (e) => {
+        this.setState({password: e.target.value});
+    };
+
     addDevice = () => {
 
 
@@ -107,6 +127,26 @@ class Settings extends React.Component {
 
   };
 
+    addUser = () => {
+        let user = {
+            lastName: this.state.lastName,
+            login: this.state.login,
+            password: this.state.password,
+            screenResolution: this.state.screenResolution,
+            firstName: this.state.firstName,
+            middleName: this.state.middleName
+        };
+        this.props.actionAddNewUser(user);
+
+        /*  console.log(this.state, this.props.deviceOS);
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device', true);
+          xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+          //xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.send(JSON.stringify(device));*/
+
+    };
+
   handleClick = (event, id) => {
     console.log('-----------', event, id);
   };
@@ -131,7 +171,7 @@ sortArray = (obj1, obj2) => {
         if (obj1.createTs > obj2.createTs) return -1;
     };
 
-  renderDevicesTable = (array) => (array && array.map((el, key) => {
+  renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el, key) => {
 
       return (<TableRow
           hover
@@ -202,39 +242,37 @@ sortArray = (obj1, obj2) => {
                                       <TextField
                                           label="Login"
                                           className={inputStyle}
+                                          onChange={this.changeLogin}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Фамилия"
                                           className={inputStyle}
+                                          onChange={this.changeLastName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Имя"
                                           className={inputStyle}
+                                          onChange={this.changeFirstName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Отчество"
                                           className={inputStyle}
+                                          onChange={this.changeMiddleName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Пароль"
                                           className={inputStyle}
+                                          onChange={this.changePassword}
                                       />
                                   </div>
-                                  <div>
-                                      <TextField
-                                          label="Подтвердите пароль"
-                                          className={inputStyle}
-                                      />
-                                  </div>
-
                                   <FormControl >
                                       <InputLabel htmlFor="role">Роль</InputLabel>
                                       <Select
@@ -251,7 +289,7 @@ sortArray = (obj1, obj2) => {
                                   </FormControl>
                                   <div>
                                       <Button variant="contained" color='primary' style={style}
-                                              onClick={() => this.showAddComponent('user')}>Добавить</Button>
+                                              onClick={this.addUser}>Добавить</Button>
                                       <Button variant="contained" color='primary' style={style}
                                               onClick={() => this.showAddComponent('empty')}>Отмена</Button>
                                   </div>
@@ -378,5 +416,6 @@ export default connect(mapStateToProps, {
     getAllUsers,
     actionGetAllDevice,
     actionAddNewDevice,
-    actionDeleteDevice
+    actionDeleteDevice,
+    actionAddNewUser
 })(Settings);

@@ -98,5 +98,28 @@ export const actionDeleteDevice = (data) => (dispatch) => {
 };
 
 
+export const actionEditDevice = (id, data) => (dispatch) => {
+    console.log('=========actionEditDevice==============', id, data);
+    fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device/' + id, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem('token'),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        return response.text();
+    }).then((response) => {
+        console.log(response);
+        services.getAllDevice()
+            .then((devices) => {
+                console.log(devices);
+                dispatch({
+                    type: commonAction.GET_ALL_DEVICE,
+                    payload: devices
+                });
+            })
+    })
+};
 
 

@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import List from '@material-ui/core/List';
 import {connect} from "react-redux";
 import {getDeviceOS, getAllUsers, actionAddNewUser} from "../settings/action";
-import {actionGetAllDevice, actionAddNewDevice, actionDeleteDevice} from "../../common/action";
+import {actionGetAllDevice, actionAddNewDevice, actionDeleteDevice, actionEditDevice} from "../../common/action";
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
@@ -156,13 +156,30 @@ class Settings extends React.Component {
     };
 
     editDevice = (el) => {
-        console.log(el);
         this.setState({
             deviceTitle: el.name,
             description: el.description,
             screenResolution: el.screenResolution,
             value: el.deviceOs.id,
-            editing: true
+            editing: true,
+            editedDeviceId: el.id
+        })
+    };
+
+    acceptEditDevice = () => {
+        let device = {
+            description: this.state.description,
+            deviceOs: {
+                _entityName: "testersjournal$OperationSystem",
+                id: this.state.value,
+            },
+            name: this.state.deviceTitle,
+            screenResolution: this.state.screenResolution,
+        };
+        this.props.actionEditDevice(this.state.editedDeviceId, device);
+        this.setState({
+            editing: false,
+            editedDeviceId: false
         })
     };
 
@@ -336,7 +353,7 @@ sortArray = (obj1, obj2) => {
 
                                       <div>
                                           {this.state.editing ?
-                                              <Button variant="contained" color='primary' style={style} onClick={this.addDevice}>Редактировать</Button> :
+                                              <Button variant="contained" color='primary' style={style} onClick={this.acceptEditDevice}>Редактировать</Button> :
                                               <Button variant="contained" color='primary' style={style} onClick={this.addDevice}>Добавить</Button>}
 
                                           <Button variant="contained" color='primary' style={style}
@@ -417,5 +434,6 @@ export default connect(mapStateToProps, {
     actionGetAllDevice,
     actionAddNewDevice,
     actionDeleteDevice,
+    actionEditDevice,
     actionAddNewUser
 })(Settings);

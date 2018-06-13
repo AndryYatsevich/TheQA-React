@@ -21,3 +21,22 @@ fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$OperationSystem
         })
 
 };
+
+export const getAllUsers = () => (dispatch) => {
+    fetch('http://localhost:8080/app/rest/v2/entities/sec$User', {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem('token'),
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        return response.text();
+    }).then((users) => {
+        console.log(users);
+        dispatch({
+            type: settingsAction.GET_ALL_USERS,
+            payload: users
+        });
+    })
+
+};

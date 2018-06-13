@@ -117,6 +117,48 @@ class Home extends React.Component {
         };
     };
 
+    getAllUsers = () => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/sec$User', true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send();
+        xhr.onreadystatechange = function () { // (3)
+            if (xhr.readyState !== 4) return;
+
+            console.log(xhr.responseText);
+
+
+            if (xhr.status !== 200) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            } else {
+                alert(xhr.responseText);
+
+            }
+        };
+    };
+
+    getAllRoles = () => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/sec$Role', true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send();
+        xhr.onreadystatechange = function () { // (3)
+            if (xhr.readyState !== 4) return;
+
+            console.log(xhr.responseText);
+
+
+            if (xhr.status !== 200) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            } else {
+                alert(xhr.responseText);
+
+            }
+        };
+    };
+
   authorization = (e) => {
         e.preventDefault();
         console.log('----------------------', services);
@@ -183,6 +225,10 @@ class Home extends React.Component {
                                     onClick={this.changeDevice}>Изменить чего-нибудь</Button>
                             <Button variant="contained" color='primary' style={style}
                                     onClick={this.deleteDevice}>Удалить чего-нибудь</Button>
+                            <Button variant="contained" color='primary' style={style}
+                                    onClick={this.getAllUsers}>Запросить всех пользователей</Button>
+                            <Button variant="contained" color='primary' style={style}
+                                    onClick={this.getAllRoles}>Запросить всех ролей</Button>
                         </div>
                     </MuiThemeProvider> :
                     <Row>

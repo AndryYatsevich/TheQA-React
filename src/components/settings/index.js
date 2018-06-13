@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import List from '@material-ui/core/List';
 import {connect} from "react-redux";
-import {getDeviceOS} from "../settings/action";
+import {getDeviceOS, getAllUsers} from "../settings/action";
 import {actionGetAllDevice, actionAddNewDevice, actionDeleteDevice} from "../../common/action";
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -41,6 +41,8 @@ class Settings extends React.Component {
     componentDidMount () {
         this.props.getDeviceOS();
         this.props.actionGetAllDevice();
+        this.props.getAllUsers();
+
     }
     showAddComponent(componentTitle) {
         if (componentTitle === 'user') {
@@ -129,21 +131,37 @@ sortArray = (obj1, obj2) => {
         if (obj1.createTs > obj2.createTs) return -1;
     };
 
-  renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el, key) => {
+  renderDevicesTable = (array) => (array && array.map((el, key) => {
 
       return (<TableRow
           hover
           //onClick={event => this.handleClick(event, el.id)}
           // role={"checkbox"}
           key={key}>
-          <TableCell><Button variant="contained" color='primary' onClick={() => this.editDevice(el)}>Редактировать</Button></TableCell>
-          <TableCell><Button variant="contained" color='secondary' onClick={() => this.deleteDevice(el.id)}>Удалить</Button></TableCell>
           <TableCell>{el.name}</TableCell>
           <TableCell>{el.deviceOs.name} {el.description}</TableCell>
           <TableCell>{el.screenResolution}</TableCell>
           <TableCell> {el.comment}</TableCell>
+          <TableCell><Button variant="contained" color='primary' onClick={() => this.editDevice(el)}>Редактировать</Button></TableCell>
+          <TableCell><Button variant="contained" color='secondary' onClick={() => this.deleteDevice(el.id)}>Удалить</Button></TableCell>
       </TableRow>)
   }));
+
+    renderUsersTable = (array) => (array && array.map((el, key) => {
+        return (<TableRow
+            hover
+            //onClick={event => this.handleClick(event, el.id)}
+            // role={"checkbox"}
+            key={key}>
+
+            <TableCell>{el.login}</TableCell>
+            <TableCell>{el.lastName} {el.firstName} {el.middleName}</TableCell>
+            <TableCell></TableCell>
+            <TableCell> </TableCell>
+            <TableCell><Button variant="contained" color='primary' onClick={() => this.editDevice(el)}>Редактировать</Button></TableCell>
+            <TableCell><Button variant="contained" color='secondary' onClick={() => this.deleteDevice(el.id)}>Удалить</Button></TableCell>
+        </TableRow>)
+    }));
 
   render() {
       const style = {
@@ -182,7 +200,7 @@ sortArray = (obj1, obj2) => {
                               <MuiThemeProvider theme={theme}>
                                   <div>
                                       <TextField
-                                          label="Имя"
+                                          label="Login"
                                           className={inputStyle}
                                       />
                                   </div>
@@ -192,21 +210,43 @@ sortArray = (obj1, obj2) => {
                                           className={inputStyle}
                                       />
                                   </div>
+                                  <div>
+                                      <TextField
+                                          label="Имя"
+                                          className={inputStyle}
+                                      />
+                                  </div>
+                                  <div>
+                                      <TextField
+                                          label="Отчество"
+                                          className={inputStyle}
+                                      />
+                                  </div>
+                                  <div>
+                                      <TextField
+                                          label="Пароль"
+                                          className={inputStyle}
+                                      />
+                                  </div>
+                                  <div>
+                                      <TextField
+                                          label="Подтвердите пароль"
+                                          className={inputStyle}
+                                      />
+                                  </div>
 
                                   <FormControl >
-                                      <InputLabel htmlFor="age-native-simple">Роль</InputLabel>
+                                      <InputLabel htmlFor="role">Роль</InputLabel>
                                       <Select
                                           native
                                           value={this.state.value}
                                           onChange={this.handleChange}
                                           inputProps={{
-                                              id: 'age-native-simple',
+                                              id: 'role',
                                           }}
                                       >
                                           <option value="" />
-                                          <option value={10}>Тестировщик</option>
-                                          <option value={20}>Team Lead</option>
-                                          <option value={30}>Admin</option>
+                                          {this.renderOsSelectedField(this.props.roles)}
                                       </Select>
                                   </FormControl>
                                   <div>
@@ -273,7 +313,24 @@ sortArray = (obj1, obj2) => {
                       {(this.state.showComponent === 'user') ?
                           <div>
                               <MuiThemeProvider theme={theme}>
-                                  Список пользователей. Будет здесь, когда-нибудь, не знаю когда.
+                                  <MuiThemeProvider theme={theme}>
+                                      <Table
+                                          style={tableStyle}>
+                                          <TableHead>
+                                              <TableRow>
+                                                  <TableCell>Логин</TableCell>
+                                                  <TableCell>ФИО</TableCell>
+                                                  <TableCell>Роль</TableCell>
+                                                  <TableCell>d(x_X)b</TableCell>
+                                                  <TableCell></TableCell>
+                                                  <TableCell></TableCell>
+                                              </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                              { this.renderUsersTable(this.props.users)}
+                                          </TableBody>
+                                      </Table>
+                                  </MuiThemeProvider>
                               </MuiThemeProvider>
                           </div> : (this.state.showComponent === 'device') ?
                               <div>
@@ -282,12 +339,12 @@ sortArray = (obj1, obj2) => {
                                           style={tableStyle}>
                                           <TableHead>
                                               <TableRow>
-                                                  <TableCell></TableCell>
-                                                  <TableCell></TableCell>
                                                   <TableCell>Устройство</TableCell>
                                                   <TableCell>Версия ОС</TableCell>
                                                   <TableCell>Разрешение экрана</TableCell>
                                                   <TableCell>Комментарий</TableCell>
+                                                  <TableCell></TableCell>
+                                                  <TableCell></TableCell>
                                               </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -305,9 +362,11 @@ sortArray = (obj1, obj2) => {
 }
 
 const mapStateToProps = (state) => ({
-  deviceOS: state.deviceOS,
+  deviceOS: state.settings.deviceOS,
   userInfo: state.userInfo,
-  devices: state.common.devices
+  devices: state.common.devices,
+  roles: state.common.roles,
+    users: state.settings.users
 });
 
 /*const mapDispatchToProps = (dispatch) => ({
@@ -316,6 +375,7 @@ const mapStateToProps = (state) => ({
 });*/
 export default connect(mapStateToProps, {
     getDeviceOS,
+    getAllUsers,
     actionGetAllDevice,
     actionAddNewDevice,
     actionDeleteDevice

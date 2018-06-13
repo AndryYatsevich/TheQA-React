@@ -19,7 +19,7 @@ return fetch('http://localhost:8080/app/rest/v2/oauth/token', {
     },
 
     getUserInfo: function() {
-        return fetch('http://localhost:8080/app/rest/v2/userInfo', {
+        return fetch('http://localhost:8080/app/rest/v2/userInfo',  {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem('token'),
@@ -33,7 +33,21 @@ return fetch('http://localhost:8080/app/rest/v2/oauth/token', {
     },
 
     getAllDevice: function () {
-        return fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device?view=device-with-all', {
+        return fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device?view=device-with-all&limit=50&offset=0&$sort=createTs',  {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token'),
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then((response) =>{
+            return response.json();
+        }).catch((err) => {
+            console.log('An error occurred!', err);
+        });
+    },
+
+    getAllRoles: function () {
+        return fetch('http://localhost:8080/app/rest/v2/entities/sec$Role',  {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem('token'),
@@ -46,3 +60,4 @@ return fetch('http://localhost:8080/app/rest/v2/oauth/token', {
         });
     }
 }
+

@@ -38,8 +38,17 @@ export const actionGetAllDevice = () => (dispatch) => {
             payload: devices
         });
     })
+};
 
-
+export const actionGetAllRoles = () => (dispatch) => {
+    services.getAllRoles()
+        .then((roles) => {
+            console.log(roles);
+            dispatch({
+                type: commonAction.GET_ALL_ROLES,
+                payload: roles
+            });
+        })
 };
 
 export const actionAddNewDevice = (data) => (dispatch) => {
@@ -64,9 +73,8 @@ export const actionAddNewDevice = (data) => (dispatch) => {
                 });
             })
     })
-
-
 };
+
 export const actionDeleteDevice = (data) => (dispatch) => {
     fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device/' + data, {
         method: "DELETE",
@@ -87,7 +95,7 @@ export const actionDeleteDevice = (data) => (dispatch) => {
                 });
             })
     })
-
-
 };
+
+
 

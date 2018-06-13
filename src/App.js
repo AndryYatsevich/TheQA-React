@@ -14,7 +14,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ListItem from '@material-ui/core/ListItem';
 import Home from './components/home';
 import {connect} from 'react-redux';
-import {actionGetUserInfo} from "./common/action";
+import {actionGetUserInfo, actionGetAllRoles} from "./common/action";
 import { withStyles } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -71,6 +71,7 @@ class App extends Component {
                 console.log('++++++++++++++++++++++++++++++++App.js++++++++++++++++++++++++++');
                 console.log(localStorage.getItem('token'));
                 this.props.actionGetUserInfo();
+                this.props.actionGetAllRoles();
                 this.setState({authorization: true})
             }else {
                 this.setState({authorization: false})
@@ -143,5 +144,6 @@ userInfo: state.userInfo
 /*export default App;*/
 
 export default connect(mapStateToProps, {
-    actionGetUserInfo
+    actionGetUserInfo,
+    actionGetAllRoles
 })(App);

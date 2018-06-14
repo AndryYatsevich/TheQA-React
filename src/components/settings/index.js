@@ -17,6 +17,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import {createMuiTheme} from "@material-ui/core/styles/index";
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/ModeEdit';
 
 const theme = createMuiTheme({
     palette: {
@@ -66,8 +68,8 @@ class Settings extends React.Component {
         console.log(event, event.target.value, this.state);
         this.setState({value: event.target.value})};
 
-    renderOsSelectedField = (array) => (array && array.map((el) => {
-       return <option value={el.id}>{el.name}</option>
+    renderOsSelectedField = (array) => (array && array.map((el, key) => {
+       return <option value={el.id} key={key}>{el.name}</option>
     }));
 
     changeDeviceTitle = (e) => {
@@ -117,7 +119,14 @@ class Settings extends React.Component {
             state: 'FREE'
         };
             this.props.actionAddNewDevice(device);
-
+        this.setState({
+            editing: false,
+            editedDeviceId: false,
+            deviceTitle: null,
+            description: null,
+            screenResolution: null,
+            value: null,
+        })
         /*  console.log(this.state, this.props.deviceOS);
           let xhr = new XMLHttpRequest();
           xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device', true);
@@ -165,6 +174,16 @@ class Settings extends React.Component {
             editedDeviceId: el.id
         })
     };
+    cancelEditDevice =() => {
+        this.setState({
+            editing: false,
+            editedDeviceId: false,
+            deviceTitle: null,
+            description: null,
+            screenResolution: null,
+            value: null,
+        })
+    };
 
     acceptEditDevice = () => {
         let device = {
@@ -179,7 +198,11 @@ class Settings extends React.Component {
         this.props.actionEditDevice(this.state.editedDeviceId, device);
         this.setState({
             editing: false,
-            editedDeviceId: false
+            editedDeviceId: false,
+            deviceTitle: null,
+            description: null,
+            screenResolution: null,
+            value: null,
         })
     };
 
@@ -189,34 +212,44 @@ sortArray = (obj1, obj2) => {
     };
 
   renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el, key) => {
-
       return (<TableRow
           hover
-          //onClick={event => this.handleClick(event, el.id)}
-          // role={"checkbox"}
           key={key}>
           <TableCell>{el.name}</TableCell>
           <TableCell>{el.deviceOs.name} {el.description}</TableCell>
           <TableCell>{el.screenResolution}</TableCell>
           <TableCell> {el.comment}</TableCell>
-          <TableCell><Button variant="contained" color='primary' onClick={() => this.editDevice(el)}>Редактировать</Button></TableCell>
-          <TableCell><Button variant="contained" color='secondary' onClick={() => this.deleteDevice(el.id)}>Удалить</Button></TableCell>
+          <TableCell>
+              <Button variant="fab" color="secondary" aria-label="edit" onClick={() => this.editDevice(el)} color='primary'>
+                  <EditIcon />
+              </Button>
+          </TableCell>
+          <TableCell>
+              <Button variant="fab" aria-label="delete" onClick={() => this.deleteDevice(el.id)} color='secondary'>
+                  <DeleteIcon />
+              </Button>
+          </TableCell>
       </TableRow>)
   }));
 
     renderUsersTable = (array) => (array && array.map((el, key) => {
         return (<TableRow
             hover
-            //onClick={event => this.handleClick(event, el.id)}
-            // role={"checkbox"}
             key={key}>
-
             <TableCell>{el.login}</TableCell>
             <TableCell>{el.lastName} {el.firstName} {el.middleName}</TableCell>
             <TableCell></TableCell>
             <TableCell> </TableCell>
-            <TableCell><Button variant="contained" color='primary' onClick={() => this.editDevice(el)}>Редактировать</Button></TableCell>
-            <TableCell><Button variant="contained" color='secondary' onClick={() => this.deleteDevice(el.id)}>Удалить</Button></TableCell>
+            <TableCell>
+                <Button variant="fab" color="secondary" aria-label="edit" onClick={() => this.editDevice(el)} color='primary'>
+                    <EditIcon />
+                </Button>
+            </TableCell>
+            <TableCell>
+                <Button variant="fab" aria-label="delete" onClick={() => this.deleteDevice(el.id)} color='secondary'>
+                    <DeleteIcon />
+                </Button>
+            </TableCell>
         </TableRow>)
     }));
 
@@ -258,35 +291,32 @@ sortArray = (obj1, obj2) => {
                                   <div>
                                       <TextField
                                           label="Login"
-                                          className={inputStyle}
+
+                                          defaultValue={' '}
                                           onChange={this.changeLogin}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Фамилия"
-                                          className={inputStyle}
                                           onChange={this.changeLastName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Имя"
-                                          className={inputStyle}
                                           onChange={this.changeFirstName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Отчество"
-                                          className={inputStyle}
                                           onChange={this.changeMiddleName}
                                       />
                                   </div>
                                   <div>
                                       <TextField
                                           label="Пароль"
-                                          className={inputStyle}
                                           onChange={this.changePassword}
                                       />
                                   </div>
@@ -319,10 +349,13 @@ sortArray = (obj1, obj2) => {
                                               label="Название устройства"
                                               value={this.state.deviceTitle}
                                               onChange={this.changeDeviceTitle}
+                                              inputlabelprops={{
+                                                  shrink: true,
+                                              }}
                                           />
                                       </div>
                                       <FormControl>
-                                          <InputLabel htmlFor="os">Операционная система</InputLabel>
+                                          <InputLabel htmlFor="os">ОC</InputLabel>
                                       <Select
                                           native
                                           value={this.state.value}
@@ -330,9 +363,11 @@ sortArray = (obj1, obj2) => {
                                           inputProps={{
                                               id: 'os',
                                           }}
+                                          InputLabelProps={{
+                                              shrink: true,
+                                          }}
                                       >
                                           <option value="" />
-                                          {console.log('++++++++++++++++++', this.props, this.state)}
                                           {this.renderOsSelectedField(this.props.deviceOS)}
                                       </Select>
                                       </FormControl>
@@ -341,6 +376,9 @@ sortArray = (obj1, obj2) => {
                                               label="Версия ОС"
                                               value={this.state.description}
                                               onChange={this.changeDescription}
+                                              InputLabelProps={{
+                                                  shrink: true,
+                                              }}
                                           />
                                       </div>
                                       <div>
@@ -348,6 +386,9 @@ sortArray = (obj1, obj2) => {
                                               label="Разрешение экрана"
                                               value={this.state.screenResolution}
                                               onChange={this.changeScreenResolution}
+                                              InputLabelProps={{
+                                                  shrink: true,
+                                              }}
                                           />
                                       </div>
 
@@ -355,9 +396,11 @@ sortArray = (obj1, obj2) => {
                                           {this.state.editing ?
                                               <Button variant="contained" color='primary' style={style} onClick={this.acceptEditDevice}>Редактировать</Button> :
                                               <Button variant="contained" color='primary' style={style} onClick={this.addDevice}>Добавить</Button>}
-
-                                          <Button variant="contained" color='primary' style={style}
-                                                  onClick={() => this.showAddComponent('empty')}>Отмена</Button>
+                                          {this.state.editing ?
+                                              <Button variant="contained" color='primary' style={style}
+                                                  onClick={this.cancelEditDevice}>Отмена</Button> :
+                                              <Button variant="contained" color='primary' style={style}
+                                                      onClick={() => this.showAddComponent('empty')}>Отмена</Button>}
                                       </div>
                                   </MuiThemeProvider>
                               </div> : ''}

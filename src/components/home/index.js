@@ -98,7 +98,7 @@ class Home extends React.Component {
 
     getRole = () => {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/app/rest/v2/queries/sec$UserRole/getRolesForUser?userId=60885987-1b61-4247-94c7-dff348347f93', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/queries/sec$User/getRolesForUser?login=admin', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send();

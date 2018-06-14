@@ -11,6 +11,17 @@ import {connect} from 'react-redux';
 import {changeStatusToWork} from './action';
 import {actionGetAllDevice} from "../../common/action";
 import Button from '@material-ui/core/Button';
+import {createMuiTheme} from "@material-ui/core/styles/index";
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#9dc02a",
+        }, // Purple and green play nicely together.
+        secondary: { main: '#e50909' }, // This is just green.A700 as hex.
+    },
+});
 
 class Journal extends React.Component {
     constructor(props) {
@@ -74,10 +85,10 @@ class Journal extends React.Component {
 
     renderDeviceButton = (el) => {
         if (el.state === 'FREE') {
-            return <Button label="Взять в работу" backgroundColor={"#9dc02a"} onClick={() => this.takeToWork(el)}/>
+            return <Button variant="contained" color='primary' onClick={() => this.takeToWork(el)}>Взять в работу</Button>
         }
         if(el.state === 'TAKEN') {
-            return <Button label="Сдать" backgroundColor={"red"} onClick={() => this.returnDevice(el)}/>
+            return <Button variant="contained" color='secondary' onClick={() => this.returnDevice(el)}>Сдать</Button>
         }
         if (el.state === 'WAIT') {
             setTimeout(() => {
@@ -116,7 +127,7 @@ class Journal extends React.Component {
         };
         return (
             <Grid fluid>
-                <MuiThemeProvider>
+                <MuiThemeProvider theme={theme}>
                 <Row>
                     <Col xs={12}>
 

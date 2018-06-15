@@ -25,7 +25,7 @@ fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$OperationSystem
 };
 
 export const getAllUsers = () => (dispatch) => {
-    fetch('http://localhost:8080/app/rest/v2/entities/sec$User', {
+    fetch('http://localhost:8080/app/rest/api/getUsersWithRoles', {
         method: "GET",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem('token'),
@@ -56,7 +56,7 @@ export const actionAddNewUser = (data) => (dispatch) => {
     }).then((response) => {
         return response.text();
     }).then(() =>{
-        fetch('http://localhost:8080/app/rest/v2/entities/sec$User', {
+        fetch('http://localhost:8080/app/rest/api/getUsersWithRoles', {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem('token'),

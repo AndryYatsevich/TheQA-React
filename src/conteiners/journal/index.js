@@ -130,10 +130,8 @@ class Journal extends React.Component {
                 <MuiThemeProvider theme={theme}>
                 <Row>
                     <Col xs={12}>
-
                             <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
-                        {(!this.state.authorization) ? <div>Авторизуйтесь в системе.</div> :
-                            <Table
+                             <Table
                                 style={tableStyle}>
                                 <TableHead
                                     displaySelectAll={this.state.showCheckboxes}
@@ -149,26 +147,11 @@ class Journal extends React.Component {
                                         <TableCell>Комментарий</TableCell>
                                     </TableRow>
                                 </TableHead>
-                                <TableBody
-                                    displayRowCheckbox={this.state.showCheckboxes}
-
-                                >
-                                    {console.log('dasdsd', this.props)}
+                                <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                                     { this.renderDevicesTable(this.props.devices)}
-                                    <TableRow
-                                        hoverable={true}>
-                                        <TableCell>Sony Xperia ZR C5502</TableCell>
-                                        <TableCell>4.4.4</TableCell>
-                                        <TableCell>1280x720</TableCell>
-                                        <TableCell> </TableCell>
-                                        <TableCell> </TableCell>
-                                        <TableCell> </TableCell>
-                                        <TableCell> </TableCell>
-                                        <TableCell> </TableCell>
-                                    </TableRow>
                                 </TableBody>
                             </Table>
-                        }
+
 
                     </Col>
                 </Row>

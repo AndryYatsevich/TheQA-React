@@ -59,15 +59,10 @@ class Home extends React.Component {
     addDevice = () => {
         let device = {
             name: "Азазяшка",
-            deviceOs: {
-                _entityName: "testersjournal$OperationSystem",
-
-                id: "0f788d26-6e28-e016-4fa5-c957358e899a",
-
-            }
+            password: "takoe"
         };
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device', true);
+        xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/sec$User', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         //xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(device));
@@ -79,10 +74,10 @@ class Home extends React.Component {
             name: "Азазяшка"
         };
         let xhr = new XMLHttpRequest();
-        xhr.open('PUT', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device/2d138510-d1b7-1e77-a8cf-6beb4fb16cc8', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/sec$User', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         //xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(device));
+        xhr.send();
     };
 
     deleteDevice = () => {
@@ -90,15 +85,15 @@ class Home extends React.Component {
             name: "Азазяшка"
         };
         let xhr = new XMLHttpRequest();
-        xhr.open('DELETE', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device/2d138510-d1b7-1e77-a8cf-6beb4fb16cc8', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Testing', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         //xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(device));
+        xhr.send();
     };
 
     getRole = () => {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/app/rest/v2/queries/sec$User/getRolesForUser?login=admin', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/api/getUserInfo', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send();
@@ -119,7 +114,7 @@ class Home extends React.Component {
 
     getAllUsers = () => {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/sec$User', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/api/getUsersWithRoles', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send();

@@ -19,7 +19,7 @@ return fetch('http://localhost:8080/app/rest/v2/oauth/token', {
     },
 
     getUserInfo: function() {
-        return fetch('http://localhost:8080/app/rest/v2/userInfo',  {
+        return fetch('http://localhost:8080/app/rest/api/getUserInfo',  {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem('token'),

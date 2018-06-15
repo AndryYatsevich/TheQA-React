@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import {createMuiTheme} from "@material-ui/core/styles/index";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/ModeEdit';
+import Deviceform from '../../components/deviceForm/index';
 
 const theme = createMuiTheme({
     palette: {
@@ -72,6 +73,7 @@ class Settings extends React.Component {
        return <option value={el.id} key={key}>{el.name}</option>
     }));
 
+
     changeDeviceTitle = (e) => {
         this.setState({deviceTitle: e.target.value});
     };
@@ -107,7 +109,7 @@ class Settings extends React.Component {
     addDevice = () => {
 
 
-        let device = {
+       let device = {
             description: this.state.description,
             deviceOs: {
                 _entityName: "testersjournal$OperationSystem",
@@ -118,22 +120,12 @@ class Settings extends React.Component {
             screenResolution: this.state.screenResolution,
             state: 'FREE'
         };
-            this.props.actionAddNewDevice(device);
-        this.setState({
-            editing: false,
-            editedDeviceId: false,
-            deviceTitle: null,
-            description: null,
-            screenResolution: null,
-            value: null,
-        })
-        /*  console.log(this.state, this.props.deviceOS);
-          let xhr = new XMLHttpRequest();
-          xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device', true);
-          xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-          //xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify(device));*/
 
+       console.log(device);
+            this.props.actionAddNewDevice(device);
+        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.state);
+
+        console.log('+++++++++++++++++++++++++++++++!!!!!!!!!!!!!!!!!!!!!!!!!!++++++++++++++++++++++++++', this.state);
   };
 
     addUser = () => {
@@ -146,19 +138,7 @@ class Settings extends React.Component {
             middleName: this.state.middleName
         };
         this.props.actionAddNewUser(user);
-
-        /*  console.log(this.state, this.props.deviceOS);
-          let xhr = new XMLHttpRequest();
-          xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Device', true);
-          xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-          //xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify(device));*/
-
     };
-
-  handleClick = (event, id) => {
-    console.log('-----------', event, id);
-  };
 
     deleteDevice = (id) => {
         this.props.actionDeleteDevice(id);
@@ -178,10 +158,10 @@ class Settings extends React.Component {
         this.setState({
             editing: false,
             editedDeviceId: false,
-            deviceTitle: null,
-            description: null,
-            screenResolution: null,
-            value: null,
+            deviceTitle: '',
+            description: '',
+            screenResolution: false,
+            value: false,
         })
     };
 
@@ -203,7 +183,8 @@ class Settings extends React.Component {
             description: null,
             screenResolution: null,
             value: null,
-        })
+        });
+        console.log(this.state);
     };
 
 sortArray = (obj1, obj2) => {
@@ -237,8 +218,8 @@ sortArray = (obj1, obj2) => {
             hover
             key={key}>
             <TableCell>{el.login}</TableCell>
-            <TableCell>{el.lastName} {el.firstName} {el.middleName}</TableCell>
-            <TableCell></TableCell>
+            <TableCell>{el.name}</TableCell>
+            <TableCell>{el.roles}</TableCell>
             <TableCell> </TableCell>
             <TableCell>
                 <Button variant="fab" color="secondary" aria-label="edit" onClick={() => this.editDevice(el)} color='primary'>
@@ -267,7 +248,10 @@ sortArray = (obj1, obj2) => {
       };
       return (
           <Grid className={'content-height'}>
+
               <Row>
+                  {console.log(this.props.userInfo)}
+                  {(this.props.userInfo && this.props.userInfo.roles[0] === 'Administrators') ?
                   <Col xs={4}>
 
                       <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
@@ -283,7 +267,9 @@ sortArray = (obj1, obj2) => {
                                       onClick={() => this.showAddComponent('user')}>Добавить пользователя</Button>
                           </MuiThemeProvider>
                       </div>
+
                   </Col>
+                      : '' }
                   <Col xs={8}>
                       {(this.state.showComponent === 'user') ?
                           <div>
@@ -391,7 +377,6 @@ sortArray = (obj1, obj2) => {
                                               }}
                                           />
                                       </div>
-
                                       <div>
                                           {this.state.editing ?
                                               <Button variant="contained" color='primary' style={style} onClick={this.acceptEditDevice}>Редактировать</Button> :
@@ -402,6 +387,8 @@ sortArray = (obj1, obj2) => {
                                               <Button variant="contained" color='primary' style={style}
                                                       onClick={() => this.showAddComponent('empty')}>Отмена</Button>}
                                       </div>
+
+                                      <Deviceform addDevice={this.addDevice} deviceOS={this.props.deviceOS} handleChange={this.handleChange} changeDeviceTitle={this.changeDeviceTitle}/>
                                   </MuiThemeProvider>
                               </div> : ''}
                   </Col>
@@ -419,7 +406,7 @@ sortArray = (obj1, obj2) => {
                                                   <TableCell>Логин</TableCell>
                                                   <TableCell>ФИО</TableCell>
                                                   <TableCell>Роль</TableCell>
-                                                  <TableCell>d(x_X)b</TableCell>
+                                                  <TableCell>email</TableCell>
                                                   <TableCell></TableCell>
                                                   <TableCell></TableCell>
                                               </TableRow>
@@ -454,6 +441,7 @@ sortArray = (obj1, obj2) => {
 
                   </Col>
               </Row>
+
           </Grid>
       );
   }
@@ -461,7 +449,7 @@ sortArray = (obj1, obj2) => {
 
 const mapStateToProps = (state) => ({
   deviceOS: state.settings.deviceOS,
-  userInfo: state.userInfo,
+  userInfo: state.common.userInfo,
   devices: state.common.devices,
   roles: state.common.roles,
     users: state.settings.users

@@ -12,7 +12,7 @@ import Drawer from '@material-ui/core/Drawer';
 import ListItemText from '@material-ui/core/ListItemText';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ListItem from '@material-ui/core/ListItem';
-import Home from './components/home';
+import Home from './conteiners/home';
 import {connect} from 'react-redux';
 import {actionGetUserInfo, actionGetAllRoles} from "./common/action";
 import { withStyles } from '@material-ui/core/styles';

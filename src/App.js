@@ -108,7 +108,7 @@ class App extends Component {
         return (
             <Grid fluid className={"general-grid"}>
                 <Row>
-                    <Col xs={12} className={'general-col'}>
+                    <Col xsOffset={1} xs={10} className={'general-col'}>
                         {console.log(theme, this.state)}
                         <MuiThemeProvider theme={theme}>
                             <AppBar position="static" color={"primary"}>
@@ -126,7 +126,7 @@ class App extends Component {
                     <MyDrawer2 open={this.state.open} handler={this.handleToggle}/>
                 </Row>
                 <Row>
-                    <Col xs={12}>
+                    <Col xsOffset={1} xs={10}>
                         {(!this.state.authorization) ? <Home/> :
                             this.props.children
                         }

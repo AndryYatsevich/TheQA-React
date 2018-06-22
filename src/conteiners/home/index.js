@@ -36,6 +36,10 @@ class Home extends React.Component {
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send();
+        xhr.onprogress = function(event) {
+           console.log( 'Получено с сервера ' + event.loaded + ' байт из ' + event.total );
+        };
+
         xhr.onreadystatechange = function () { // (3)
             if (xhr.readyState !== 4) return;
 

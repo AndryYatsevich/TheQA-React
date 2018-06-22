@@ -41,7 +41,7 @@ class Journal extends React.Component {
     }
 
     takeToWork = (el) => {
-        el.status = 1;
+/*        el.status = 1;
       console.log('взял в работу', el);
       let devices = this.props.devices.concat();
       for (let i = 0; i < devices.length; i++){
@@ -50,8 +50,30 @@ class Journal extends React.Component {
               devices[i] = el;
           }
       }
-      console.log(devices);
       this.props.changeStatusToWork(devices);
+      ,*/
+
+        let date = new Date();
+        let testing = {
+            user: {
+                _entityName: "sec$User",
+                id: this.props.userInfo.id,
+            },
+            device: {
+                _entityName: "testersjournal$Device",
+                id: el.id,
+                state: "TAKEN"
+            },
+            startTime: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()
+        };
+        console.log('testing: ', testing);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Testing', true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        //xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(testing));
+
+
     };
 
     returnDevice =(el) => {
@@ -164,7 +186,8 @@ class Journal extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  devices: state.common.devices
+    devices: state.common.devices,
+    userInfo: state.common.userInfo
 
 });
 

@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import { MuiThemeProvider} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
-import {changeStatusToWork} from './action';
+import {changeStatusToWork, createNewTesting} from './action';
 import {actionGetAllDevice} from "../../common/action";
 import Button from '@material-ui/core/Button';
 import {createMuiTheme} from "@material-ui/core/styles/index";
@@ -51,6 +51,10 @@ class Journal extends React.Component {
           }
       }
       this.props.changeStatusToWork(devices);
+      JSON.stringify(testing)
+
+
+
       ,*/
 
         let date = new Date();
@@ -60,142 +64,159 @@ class Journal extends React.Component {
                 id: this.props.userInfo.id,
             },
             device: {
+
                 _entityName: "testersjournal$Device",
-                id: el.id,
-                state: "TAKEN"
+                id: el.id
             },
-            startTime: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()
+            startTime: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()
         };
         console.log('testing: ', testing);
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Testing', true);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-        //xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(testing));
+
+          this.props.createNewTesting(testing, el.id);
 
 
-    };
+        /*      let xhr = new XMLHttpRequest();
+             xhr.open('POST', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Testing', true);
+             xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+             //xhr.setRequestHeader('Content-Type', 'application/json');
+             xhr.send(JSON.stringify(testing));
+             xhr.onreadystatechange = function () { // (3)
+                 if (xhr.readyState !== 4) return;
 
-    returnDevice =(el) => {
-        el.status = 2;
-      console.log(el, 'вернул');
-        let devices = this.props.devices.concat();
-        for (let i = 0; i < devices.length; i++){
-            if(el.id === devices[i].id) {
-                console.log('el: ', el, 'device[i]: ', devices[i]);
-                devices[i] = el;
-            }
-        }
-        console.log(devices);
-        this.props.changeStatusToWork(devices);
-    };
+                 console.log(xhr.responseText);
 
-    acceptAdmin =(el) => {
-        console.log(el);
-        el.status = 0;
+
+                 if (xhr.status !== 200) {
+                     alert(xhr.status + ': ' + xhr.statusText);
+                 } else {
+                     alert(xhr.responseText);
+
+                 }
+             };*/
+
+      };
+
+      returnDevice =(el) => {
+          el.status = 2;
         console.log(el, 'вернул');
-        let devices = this.props.devices.concat();
-        for (let i = 0; i < devices.length; i++){
-            if(el.id === devices[i].id) {
-                console.log('el: ', el, 'device[i]: ', devices[i]);
-                devices[i] = el;
-            }
-        }
-        console.log(devices);
-        this.props.changeStatusToWork(devices);
-    };
+          let devices = this.props.devices.concat();
+          for (let i = 0; i < devices.length; i++){
+              if(el.id === devices[i].id) {
+                  console.log('el: ', el, 'device[i]: ', devices[i]);
+                  devices[i] = el;
+              }
+          }
+          console.log(devices);
+          this.props.changeStatusToWork(devices);
+      };
 
-    renderDeviceButton = (el) => {
-        if (el.state === 'FREE') {
-            return <Button variant="contained" color='primary' onClick={() => this.takeToWork(el)}>Взять в работу</Button>
-        }
-        if(el.state === 'TAKEN') {
-            return <Button variant="contained" color='secondary' onClick={() => this.returnDevice(el)}>Сдать</Button>
-        }
-        if (el.state === 'WAIT') {
-            setTimeout(() => {
-               return this.acceptAdmin(el);
-            },10000);
-            return <div>Ожидает подтверждения администратора</div>
-        }
+      acceptAdmin =(el) => {
+          console.log(el);
+          el.status = 0;
+          console.log(el, 'вернул');
+          let devices = this.props.devices.concat();
+          for (let i = 0; i < devices.length; i++){
+              if(el.id === devices[i].id) {
+                  console.log('el: ', el, 'device[i]: ', devices[i]);
+                  devices[i] = el;
+              }
+          }
+          console.log(devices);
+          this.props.changeStatusToWork(devices);
+      };
 
-    };
-    sortArray = (obj1, obj2) => {
-        if (obj1.createTs < obj2.createTs) return 1;
-        if (obj1.createTs > obj2.createTs) return -1;
-    };
-    renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el) => {
+      renderDeviceButton = (el) => {
+          if (el.state === 'FREE') {
+              return <Button variant="contained" color='primary' onClick={() => this.takeToWork(el)}>Взять в работу</Button>
+          }
+          if(el.state === 'TAKEN') {
+              return <Button variant="contained" color='secondary' onClick={() => this.returnDevice(el)}>Сдать</Button>
+          }
+          if (el.state === 'WAIT') {
+              setTimeout(() => {
+                 return this.acceptAdmin(el);
+              },10000);
+              return <div>Ожидает подтверждения администратора</div>
+          }
 
-        console.log('takoe', array);
-        console.log(el.deviceOs);
-        return <TableRow
-            hoverable={true}
+      };
+      sortArray = (obj1, obj2) => {
+          if (obj1.createTs < obj2.createTs) return 1;
+          if (obj1.createTs > obj2.createTs) return -1;
+      };
+      renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el) => {
 
-        key={el.id}>
-            <TableCell>{el.name}</TableCell>
-            <TableCell>{el.deviceOs.name} {el.description}</TableCell>
-            <TableCell>{el.screenResolution}</TableCell>
-            <TableCell>{this.renderDeviceButton(el)} </TableCell>
-            <TableCell> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableCell>
-            <TableCell> </TableCell>
-            <TableCell> </TableCell>
-            <TableCell> {el.comment}</TableCell>
-        </TableRow>
-    }));
+          console.log('takoe', array);
+          console.log(el.deviceOs);
+          return <TableRow
+              hoverable={true}
 
-    render() {
-        const tableStyle = {
-            backgroundColor: 'rgba(255,255,255,.8)'
-        };
-        return (
-            <Grid fluid>
-                <MuiThemeProvider theme={theme}>
-                <Row>
-                    <Col xs={12}>
-                            <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
-                             <Table
-                                style={tableStyle}>
-                                <TableHead
-                                    displaySelectAll={this.state.showCheckboxes}
-                                    adjustForCheckbox={this.state.showCheckboxes}>
-                                    <TableRow>
-                                        <TableCell>Устройство</TableCell>
-                                        <TableCell>Версия ОС</TableCell>
-                                        <TableCell>Разрешение экрана</TableCell>
-                                        <TableCell>Статус</TableCell>
-                                        <TableCell>Взял в работу</TableCell>
-                                        <TableCell>Дата/Время</TableCell>
-                                        <TableCell> </TableCell>
-                                        <TableCell>Комментарий</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                                    { this.renderDevicesTable(this.props.devices)}
-                                </TableBody>
-                            </Table>
+          key={el.id}>
+              <TableCell>{el.name}</TableCell>
+              <TableCell>{el.deviceOs.name} {el.description}</TableCell>
+              <TableCell>{el.screenResolution}</TableCell>
+              <TableCell>{this.renderDeviceButton(el)} </TableCell>
+              <TableCell> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableCell>
+              <TableCell> </TableCell>
+              <TableCell> </TableCell>
+              <TableCell> {el.comment}</TableCell>
+          </TableRow>
+      }));
+
+      render() {
+          const tableStyle = {
+              backgroundColor: 'rgba(255,255,255,.8)'
+          };
+          return (
+              <Grid fluid>
+                  <MuiThemeProvider theme={theme}>
+                  <Row>
+                      <Col xs={12}>
+                              <div><img className={'img-background'} src={'./../img/general-background.png'}/></div>
+                               <Table
+                                  style={tableStyle}>
+                                  <TableHead
+                                      displaySelectAll={this.state.showCheckboxes}
+                                      adjustForCheckbox={this.state.showCheckboxes}>
+                                      <TableRow>
+                                          <TableCell>Устройство</TableCell>
+                                          <TableCell>Версия ОС</TableCell>
+                                          <TableCell>Разрешение экрана</TableCell>
+                                          <TableCell>Статус</TableCell>
+                                          <TableCell>Взял в работу</TableCell>
+                                          <TableCell>Дата/Время</TableCell>
+                                          <TableCell> </TableCell>
+                                          <TableCell>Комментарий</TableCell>
+                                      </TableRow>
+                                  </TableHead>
+                                  <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                                      { this.renderDevicesTable(this.props.devices)}
+                                  </TableBody>
+                              </Table>
 
 
-                    </Col>
-                </Row>
-                </MuiThemeProvider>
-            </Grid>
+                      </Col>
+                  </Row>
+                  </MuiThemeProvider>
+              </Grid>
 
 
-        );
-    }
-}
+          );
+      }
+  }
 
-const mapStateToProps = (state) => ({
-    devices: state.common.devices,
-    userInfo: state.common.userInfo
+  const mapStateToProps = (state) => ({
+      devices: state.common.devices,
+      userInfo: state.common.userInfo
 
-});
+  });
 
-/*const mapDispatchToProps = (dispatch) => ({
-    devices: () => dispatch(getAllDevices)
+  /*const mapDispatchToProps = (dispatch) => ({
+      devices: () => dispatch(getAllDevices)
 
-});*/
+  });*/
 export default connect(mapStateToProps, {
     actionGetAllDevice,
-    changeStatusToWork
+    changeStatusToWork,
+    createNewTesting
 }) (Journal);

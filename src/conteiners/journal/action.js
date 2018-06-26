@@ -39,6 +39,7 @@ export const createNewTesting = (date, deviceId) => (dispatch) => {
         },
         body: JSON.stringify(date)
     }).then((response) =>{
+
         return response.json();
     }).then((devices) => {
         console.log('device++++++++++++', devices, deviceId);

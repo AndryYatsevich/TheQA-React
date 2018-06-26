@@ -58,6 +58,19 @@ return fetch('http://localhost:8080/app/rest/v2/oauth/token', {
         }).catch((err) => {
             console.log('An error occurred!', err);
         });
+    },
+    getAllTesting: function () {
+        return fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Testing',  {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token'),
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then((response) =>{
+            return response.json();
+        }).catch((err) => {
+            console.log('An error occurred!', err);
+        });
     }
 }
 

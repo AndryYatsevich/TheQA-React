@@ -12,7 +12,9 @@ import {changeStatusToWork, createNewTesting} from './action';
 import {actionGetAllDevice} from "../../common/action";
 import Button from '@material-ui/core/Button';
 import {createMuiTheme} from "@material-ui/core/styles/index";
-
+import TextField from '@material-ui/core/TextField';
+import Comment from '../../components/comment/index';
+import {actionEditDevice} from '../../common/action';
 
 const theme = createMuiTheme({
     palette: {
@@ -28,7 +30,9 @@ class Journal extends React.Component {
         super(props);
         this.state = {
             showCheckboxes: false,
-            authorization: true};
+            authorization: true,
+            comment: null
+        };
     }
 
     componentDidMount() {
@@ -125,6 +129,8 @@ class Journal extends React.Component {
           this.props.changeStatusToWork(devices);
       };
 
+
+
       renderDeviceButton = (el) => {
           if (el.state === 'FREE') {
               return <Button variant="contained" color='primary' onClick={() => this.takeToWork(el)}>Взять в работу</Button>
@@ -140,6 +146,25 @@ class Journal extends React.Component {
           }
 
       };
+    changeComment = (e) => {
+        console.log(this.state.comment);
+        this.setState({comment: e.target.value});
+    };
+
+    addComment = (id) => {
+        let comment = {
+            comment: this.state.comment
+        };
+
+        this.props.actionEditDevice(id, comment);
+    };
+
+    deleteComment = (id) => {
+      let comment = {
+          comment: null
+      };
+        this.props.actionEditDevice(id, comment);
+    };
       sortArray = (obj1, obj2) => {
           if (obj1.createTs < obj2.createTs) return 1;
           if (obj1.createTs > obj2.createTs) return -1;
@@ -159,7 +184,10 @@ class Journal extends React.Component {
               <TableCell> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableCell>
               <TableCell> </TableCell>
               <TableCell> </TableCell>
-              <TableCell> {el.comment}</TableCell>
+              <TableCell><Comment el={el}
+                                  changeComment={this.changeComment}
+                                  addComment={this.addComment}
+                                  deleteComment={this.deleteComment}/></TableCell>
           </TableRow>
       }));
 
@@ -218,5 +246,6 @@ class Journal extends React.Component {
 export default connect(mapStateToProps, {
     actionGetAllDevice,
     changeStatusToWork,
-    createNewTesting
+    createNewTesting,
+    actionEditDevice
 }) (Journal);

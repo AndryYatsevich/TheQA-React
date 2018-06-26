@@ -17,3 +17,6 @@ html, body, body > .content-height, .content-height {
   bottom: 0;
   right: 0;
 }
+.comment-buttons {
+  float: right;
+}

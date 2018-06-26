@@ -51,6 +51,17 @@ export const actionGetAllRoles = () => (dispatch) => {
         })
 };
 
+export const actionGetAllTesting = () => (dispatch) => {
+    services.getAllTesting()
+        .then((testing) => {
+            console.log(testing);
+            dispatch({
+                type: commonAction.GET_ALL_TESTING,
+                payload: testing
+            });
+        })
+};
+
 export const actionAddNewDevice = (data) => (dispatch) => {
     console.log(JSON.stringify(data));
     fetch('http://localhost:8080/app/rest/v2/entities/testersjournal$Device', {

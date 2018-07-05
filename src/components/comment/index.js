@@ -38,18 +38,26 @@ class Comment extends React.Component {
     }
 
     renderComment () {
-        return ([
-            this.props.el.comment,  <div className={'comment-buttons'}>
-            <Button variant="fab" aria-label="delete" mini onClick={this.cancelEditingComment}><EditIcon /></Button>
-            <Button variant="fab" aria-label="delete" mini onClick={this.deleteComment}><DeleteIcon /></Button>
-        </div>
-        ]);
+        if(this.props.el.state === 'TAKEN' && this.props.userInfo && this.props.el.testing.user.id === this.props.userInfo.id ) {
+            return ([
+                this.props.el.comment,  <div className={'comment-buttons'}>
+                    <Button variant="fab" aria-label="delete" mini onClick={this.cancelEditingComment}><EditIcon /></Button>
+                    <Button variant="fab" aria-label="delete" mini onClick={this.deleteComment}><DeleteIcon /></Button>
+                </div>
+            ]);
+        } else {
+            return this.props.el.comment;
+        }
+
     }
 
     renderAdd () {
-        return (
-            <Button variant="fab" color="secondary" aria-label="edit" mini onClick={ () => this.editingComment(this.props.el)}><AddIcon /></Button>
-        )
+        if(this.props.el.state === 'TAKEN' && this.props.userInfo && this.props.el.testing.user.id === this.props.userInfo.id )
+        {
+            return (
+                <Button variant="fab" color="secondary" aria-label="edit" mini onClick={ () => this.editingComment(this.props.el)}><AddIcon /></Button>
+            )
+        }
     }
     render () {
         return ( <div>

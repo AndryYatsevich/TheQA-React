@@ -120,12 +120,15 @@ class Settings extends React.Component {
             screenResolution: this.state.screenResolution,
             state: 'FREE'
         };
-
-       console.log(device);
             this.props.actionAddNewDevice(device);
-        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.state);
-
-        console.log('+++++++++++++++++++++++++++++++!!!!!!!!!!!!!!!!!!!!!!!!!!++++++++++++++++++++++++++', this.state);
+        this.setState({
+            editing: false,
+            editedDeviceId: false,
+            deviceTitle: '',
+            description: '',
+            screenResolution: '',
+            value: false,
+        })
   };
 
     addUser = () => {
@@ -160,7 +163,7 @@ class Settings extends React.Component {
             editedDeviceId: false,
             deviceTitle: '',
             description: '',
-            screenResolution: false,
+            screenResolution: '',
             value: false,
         })
     };

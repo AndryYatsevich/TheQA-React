@@ -11,6 +11,8 @@ export default (state = [], action) => {
             return {...state, roles: action.payload};
         case commonAction.GET_ALL_TESTING:
             return {...state, testing: action.payload};
+        case commonAction.CHANGE_STATUS_TO_WORK:
+            return {...state, devices: action.payload};
         default:
             return state;
     }

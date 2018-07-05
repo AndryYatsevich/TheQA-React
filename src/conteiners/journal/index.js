@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import { MuiThemeProvider} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
-import {changeStatusToWork, createNewTesting} from './action';
+import {changeStatusToWork, createNewTesting, changeStatusToFree} from './action';
 import {actionGetAllDevice} from "../../common/action";
 import Button from '@material-ui/core/Button';
 import {createMuiTheme} from "@material-ui/core/styles/index";
@@ -38,10 +38,14 @@ class Journal extends React.Component {
     componentDidMount() {
         console.log('componenDidMount');
         if (localStorage.getItem('token')){
-            this.props.actionGetAllDevice();
+            setInterval(() => {
+                this.props.actionGetAllDevice();
+            },10000);
         } else {
             this.setState({authorization: false})
         }
+
+
     }
 
     takeToWork = (el) => {
@@ -101,48 +105,34 @@ class Journal extends React.Component {
       };
 
       returnDevice =(el) => {
-          el.status = 2;
-        console.log(el, 'вернул');
-          let devices = this.props.devices.concat();
-          for (let i = 0; i < devices.length; i++){
-              if(el.id === devices[i].id) {
-                  console.log('el: ', el, 'device[i]: ', devices[i]);
-                  devices[i] = el;
-              }
-          }
-          console.log(devices);
-          this.props.changeStatusToWork(devices);
+          console.log('returnDevice', el);
+          let date = new Date();
+          let testing = {
+              endTime: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()
+          };
+          this.props.changeStatusToWork(el, testing);
       };
 
       acceptAdmin =(el) => {
           console.log(el);
-          el.status = 0;
-          console.log(el, 'вернул');
-          let devices = this.props.devices.concat();
-          for (let i = 0; i < devices.length; i++){
-              if(el.id === devices[i].id) {
-                  console.log('el: ', el, 'device[i]: ', devices[i]);
-                  devices[i] = el;
-              }
-          }
-          console.log(devices);
-          this.props.changeStatusToWork(devices);
+          this.props.changeStatusToFree(el);
       };
 
 
 
       renderDeviceButton = (el) => {
+          console.log('renderDeviceButton-------',el);
           if (el.state === 'FREE') {
               return <Button variant="contained" color='primary' onClick={() => this.takeToWork(el)}>Взять в работу</Button>
           }
-          if(el.state === 'TAKEN') {
+          if(el.state === 'TAKEN' && this.props.userInfo && el.testing.user.id === this.props.userInfo.id) {
               return <Button variant="contained" color='secondary' onClick={() => this.returnDevice(el)}>Сдать</Button>
           }
-          if (el.state === 'WAIT') {
-              setTimeout(() => {
-                 return this.acceptAdmin(el);
-              },10000);
+          if (el.state === 'WAIT' && this.props.userInfo && this.props.userInfo.roles[0] !== 'Administrators') {
               return <div>Ожидает подтверждения администратора</div>
+
+          } else if(el.state === 'WAIT' && this.props.userInfo && this.props.userInfo.roles[0] === 'Administrators') {
+              return <Button variant="contained" color='secondary' onClick={() => this.acceptAdmin(el)}>Подтвердить списание</Button>
           }
 
       };
@@ -171,7 +161,7 @@ class Journal extends React.Component {
       };
       renderDevicesTable = (array) => (array && array.sort(this.sortArray).map((el) => {
 
-          console.log('takoe', array);
+          console.log('--------------takoe', array);
           console.log(el.deviceOs);
           return <TableRow
               hoverable={true}
@@ -181,13 +171,13 @@ class Journal extends React.Component {
               <TableCell>{el.deviceOs.name} {el.description}</TableCell>
               <TableCell>{el.screenResolution}</TableCell>
               <TableCell>{this.renderDeviceButton(el)} </TableCell>
-              <TableCell> { el.state === 'TAKEN' ? <div>{el.userName}</div> : ''} </TableCell>
-              <TableCell> </TableCell>
-              <TableCell> </TableCell>
+              <TableCell>{el.state === 'TAKEN' ? <div>{el.testing.user.name}</div> : ''} </TableCell>
+              <TableCell>{el.state === 'TAKEN' ? <div>{el.testing.startTime}</div> : ''}</TableCell>
               <TableCell><Comment el={el}
                                   changeComment={this.changeComment}
                                   addComment={this.addComment}
-                                  deleteComment={this.deleteComment}/></TableCell>
+                                  deleteComment={this.deleteComment}
+                                  userInfo={this.props.userInfo}/></TableCell>
           </TableRow>
       }));
 
@@ -213,7 +203,6 @@ class Journal extends React.Component {
                                           <TableCell>Статус</TableCell>
                                           <TableCell>Взял в работу</TableCell>
                                           <TableCell>Дата/Время</TableCell>
-                                          <TableCell> </TableCell>
                                           <TableCell>Комментарий</TableCell>
                                       </TableRow>
                                   </TableHead>
@@ -247,5 +236,6 @@ export default connect(mapStateToProps, {
     actionGetAllDevice,
     changeStatusToWork,
     createNewTesting,
-    actionEditDevice
+    actionEditDevice,
+    changeStatusToFree
 }) (Journal);

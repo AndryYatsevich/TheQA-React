@@ -89,7 +89,7 @@ class Home extends React.Component {
             name: "Азазяшка"
         };
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/testersjournal$Testing', true);
+        xhr.open('GET', 'http://localhost:8080/app/rest/v2/entities/sec&User', true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         //xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();

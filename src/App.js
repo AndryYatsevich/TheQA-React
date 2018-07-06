@@ -10,12 +10,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import ListItemText from '@material-ui/core/ListItemText';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ListItem from '@material-ui/core/ListItem';
 import Home from './conteiners/home';
 import {connect} from 'react-redux';
 import {actionGetUserInfo, actionGetAllRoles, actionGetAllTesting} from "./common/action";
 import { withStyles } from '@material-ui/core/styles';
+import Profile from './components/profile';
+import Divider from '@material-ui/core/Divider';
 
 const theme = createMuiTheme({
     palette: {
@@ -36,13 +37,18 @@ const style = {
                              }}
 
             ><div className={classes.list}>
-                <Link to={`/journal`} className={'menu-item'} style={style} ><ListItem button
-                    onClick={this.handleClose}><ListItemText primary="Журнал" /></ListItem></Link>
-                <Link to={`/history`} className={'menu-item'}><ListItem button
-                    onClick={this.handleClose}><ListItemText primary="История" /></ListItem></Link>
-                <Link to={`/info`} className={'menu-item'}><ListItem button
-                    onClick={this.handleClose}><ListItemText primary="Инфо" /></ListItem></Link>
-                <Link to={`/settings`} className={'menu-item'}><ListItem button onClick={this.handleClose}><ListItemText primary="Настройки" /></ListItem></Link>
+                <ListItem button
+                    onClick={this.handleClose}><Link to={`/journal`} className={'menu-item'} style={style} ><ListItemText primary="Журнал" /></Link></ListItem>
+                <ListItem button
+                    onClick={this.handleClose}><Link to={`/history`} className={'menu-item'}><ListItemText primary="История" /></Link></ListItem>
+                <ListItem button
+                    onClick={this.handleClose}><Link to={`/info`} className={'menu-item'}><ListItemText primary="Инфо" /></Link></ListItem>
+                <ListItem button onClick={this.handleClose}><Link to={`/settings`} className={'menu-item'}><ListItemText primary="Настройки" /></Link></ListItem>
+                {this.props.auth ? (<div>
+                    <Divider />
+                    <ListItem button onClick={this.props.logout}><ListItemText primary="Выйти" /></ListItem>
+                </div>) : ''}
+
             </div>
             </Drawer>
         )
@@ -54,7 +60,6 @@ const MyDrawer2 = withStyles({
         width: 250,
     }})(MyDrawer);
 
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -62,14 +67,13 @@ class App extends Component {
             open: false,
             route: window.location.hash.substr(1),
             authorization: true,
-            openMenu: false
+            openMenu: false,
+            anchorEl: null,
         };
     }
 
        componentWillMount() {
             if (localStorage.getItem('token')) {
-                console.log('++++++++++++++++++++++++++++++++App.js++++++++++++++++++++++++++');
-                console.log(localStorage.getItem('token'));
                 this.props.actionGetUserInfo();
                 this.props.actionGetAllRoles();
                 this.props.actionGetAllTesting();
@@ -97,6 +101,12 @@ class App extends Component {
     handleToggle = () => {
         this.setState({open: !this.state.open});
     };
+
+    logout = () => {
+        localStorage.removeItem('token');
+        this.setState({authorization: false});
+    };
+
     // handleClose = () => this.setState({open: 'false'});
 
     // toggleDrawer = (side, open) => () => {
@@ -105,26 +115,27 @@ class App extends Component {
     //     });
     // };
     render() {
-
         return (
             <Grid fluid className={"general-grid"}>
                 <Row>
                     <Col xsOffset={1} xs={10} className={'general-col'}>
-                        {console.log(theme, this.state)}
                         <MuiThemeProvider theme={theme}>
-                            <AppBar position="static" color={"primary"}>
+                            <AppBar position="static" color={"primary"} className={"profile-block"}>
                                 <Toolbar>
                                     <IconButton color="inherit" aria-label="Menu" onClick={this.handleToggle}>
                                         <MenuIcon />
                                     </IconButton>
                                     <Typography variant="title" color="inherit">
-                                        Title
+                                        {localStorage.getItem('token') && (
+                                            this.props.userInfo ? <div> <Profile userInfo={this.props.userInfo}/></div>: ''
+                                        )}
                                     </Typography>
+
                                 </Toolbar>
                             </AppBar>
                         </MuiThemeProvider>
                     </Col>
-                    <MyDrawer2 open={this.state.open} handler={this.handleToggle}/>
+                    <MyDrawer2 open={this.state.open} handler={this.handleToggle} logout={this.logout} auth={this.state.authorization}/>
                 </Row>
                 <Row>
                     <Col xsOffset={1} xs={10}>
@@ -139,7 +150,7 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-userInfo: state.userInfo
+userInfo: state.common.userInfo
 });
 
 /*export default App;*/

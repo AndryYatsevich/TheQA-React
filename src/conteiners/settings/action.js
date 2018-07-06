@@ -45,7 +45,7 @@ export const getAllUsers = () => (dispatch) => {
 
 
 export const actionAddNewUser = (data) => (dispatch) => {
-    console.log(JSON.stringify(data));
+    console.log('actionAddNewUsre', JSON.stringify(data));
     fetch('http://localhost:8080/app/rest/v2/entities/sec$User', {
         method: "POST",
         headers: {
@@ -54,6 +54,7 @@ export const actionAddNewUser = (data) => (dispatch) => {
         },
         body: JSON.stringify(data)
     }).then((response) => {
+        console.log(response);
         return response.text();
     }).then(() =>{
         fetch('http://localhost:8080/app/rest/api/getUsersWithRoles', {

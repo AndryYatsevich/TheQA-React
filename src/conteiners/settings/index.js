@@ -138,7 +138,9 @@ class Settings extends React.Component {
             password: this.state.password,
             screenResolution: this.state.screenResolution,
             firstName: this.state.firstName,
-            middleName: this.state.middleName
+            middleName: this.state.middleName,
+            
+            _entityName: "sec$User"
         };
         this.props.actionAddNewUser(user);
     };
@@ -253,7 +255,6 @@ sortArray = (obj1, obj2) => {
           <Grid className={'content-height'}>
 
               <Row>
-                  {console.log(this.props.userInfo)}
                   {(this.props.userInfo && this.props.userInfo.roles[0] === 'Administrators') ?
                   <Col xs={4}>
 
@@ -272,7 +273,7 @@ sortArray = (obj1, obj2) => {
                       </div>
 
                   </Col>
-                      : '' }
+                      : <div>У вас не достаточно прав</div> }
                   <Col xs={8}>
                       {(this.state.showComponent === 'user') ?
                           <div>
